@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Materials - JEMERAD Catering</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #8B4513;
+            --secondary: #5D4037;
+            --gold: #FFD700;
+            --light: #FFF8F0;
+            --dark: #3E2723;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        header {
+            background: white;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        
+        .logo span {
+            color: var(--gold);
+        }
+        
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background: var(--gold);
+            color: var(--dark);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--gold);
+            color: var(--gold);
+        }
+        
+        .section {
+            padding: 60px 0;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .section-header h2 {
+            font-size: 2.2rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        
+        .section-header p {
+            font-size: 1.1rem;
+            color: var(--secondary);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .auth-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            display: none;
+        }
+        
+        .auth-modal.active {
+            display: flex;
+        }
+        
+        .auth-container {
+            background: white;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 15px;
+            padding: 30px;
+            position: relative;
+        }
+        
+        .auth-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .auth-header h2 {
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .auth-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--secondary);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--secondary);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0d8d0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+        
+        .dashboard {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .welcome-section {
+            background: var(--light);
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .modules-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        
+        .module-card {
+            background: var(--light);
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+        
+        .module-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .module-card h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .video-container {
+            margin: 20px 0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .video-container video {
+            width: 100%;
+            border-radius: 10px;
+        }
+        
+        .assignment-section {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e0d8d0;
+        }
+        
+        .assignment-section h4 {
+            color: var(--secondary);
+            margin-bottom: 15px;
+        }
+        
+        .social-sharing {
+            margin-top: 20px;
+            padding: 20px;
+            background: var(--light);
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .social-sharing h4 {
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        
+        .social-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .social-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: 50px;
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .social-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .facebook {
+            background: #3b5998;
+        }
+        
+        .twitter {
+            background: #1da1f2;
+        }
+        
+        .instagram {
+            background: #e1306c;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            z-index: 2000;
+            display: none;
+        }
+        
+        .notification.success {
+            background: #4CAF50;
+        }
+        
+        .notification.error {
+            background: #f44336;
+        }
+        
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 50px 0 20px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .footer-column h3 {
+            color: var(--gold);
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-links a {
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: var(--gold);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #5D4037;
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .modules-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <a href="index.html" class="logo"><i class="fas fa-utensils"></i>JEMERAD <span>Catering</span></a>
+            <div class="header-actions">
+                <span id="welcomeUser" style="margin-right: 15px; color: var(--primary); font-weight: 600;"></span>
+                <button class="btn btn-outline" id="logoutBtn" style="display: none;">Logout</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Auth Modal -->
+    <div class="auth-modal" id="authModal">
+        <div class="auth-container">
+            <button class="auth-close" id="authClose">&times;</button>
+            <div class="auth-header">
+                <h2>Access Course Materials</h2>
+                <p>Please enter your access code to continue</p>
+            </div>
+            <form id="accessForm">
+                <div class="form-group">
+                    <label for="accessCode">Access Code</label>
+                    <input type="text" id="accessCode" class="form-control" placeholder="Enter your access code" required>
+                </div>
+                <button type="submit" class="btn" style="width: 100%;">Access Course</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <section class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Professional Catering Course</h2>
+                <p>Learn from industry experts and master the art of professional catering</p>
+            </div>
+            
+            <div class="dashboard" id="courseDashboard" style="display: none;">
+                <div class="welcome-section">
+                    <h3>Welcome to Your Catering Course!</h3>
+                    <p>Access all course materials, track your progress, and complete assignments to earn your certificate.</p>
+                    <div id="userDetails" style="margin-top: 15px; padding: 15px; background: white; border-radius: 8px;"></div>
+                </div>
+                
+                <h3 style="color: var(--primary); margin-bottom: 20px;"><i class="fas fa-book-open"></i> Course Modules</h3>
+                
+                <div class="modules-container">
+                    <!-- Module 1 -->
+                    <div class="module-card">
+                        <h3><i class="fas fa-blender"></i> Kitchen Fundamentals</h3>
+                        <p>Learn the basics of kitchen safety, equipment handling, and foundational cooking techniques.</p>
+                        <div class="video-container">
+                            <video controls>
+                                <source src="VID-20251123-WA0120.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+                        <div class="assignment-section">
+                            <h4><i class="fas fa-tasks"></i> Assignment</h4>
+                            <p>Record a video demonstrating 3 basic knife cuts and submit for review.</p>
+                            <button class="btn" onclick="completeModule(1)">Mark as Completed</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Module 2 -->
+                    <div class="module-card">
+                        <h3><i class="fas fa-fire"></i> Cooking Techniques</h3>
+                        <p>Master various cooking methods including grilling, baking, steaming, and frying.</p>
+                        <div class="video-container">
+                            <video controls>
+                                <source src="cooking-techniques.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+                        <div class="assignment-section">
+                            <h4><i class="fas fa-tasks"></i> Assignment</h4>
+                            <p>Prepare a dish using 3 different cooking techniques and submit photos.</p>
+                            <button class="btn" onclick="completeModule(2)">Mark as Completed</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Module 3 -->
+                    <div class="module-card">
+                        <h3><i class="fas fa-clipboard-list"></i> Menu Planning</h3>
+                        <p>Learn to create balanced menus for different events and dietary requirements.</p>
+                        <div class="video-container">
+                            <video controls>
+                                <source src="menu-planning.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+                        <div class="assignment-section">
+                            <h4><i class="fas fa-tasks"></i> Assignment</h4>
+                            <p>Create a menu for a wedding reception for 100 guests and submit.</p>
+                            <button class="btn" onclick="completeModule(3)">Mark as Completed</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Module 4 -->
+                    <div class="module-card">
+                        <h3><i class="fas fa-chart-line"></i> Business Skills</h3>
+                        <p>Develop essential business skills for running a successful catering enterprise.</p>
+                        <div class="video-container">
+                            <video controls>
+                                <source src="business-skills.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+                        <div class="assignment-section">
+                            <h4><i class="fas fa-tasks"></i> Assignment</h4>
+                            <p>Write a business plan for your catering venture and submit.</p>
+                            <button class="btn" onclick="completeModule(4)">Mark as Completed</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="social-sharing">
+                    <h4><i class="fas fa-share-alt"></i> Share Your Achievement</h4>
+                    <p>After completing all modules, share your accomplishment with the world!</p>
+                    <p style="margin-top: 15px; font-size: 0.9rem; color: #5D4037;">Need help or have questions? Contact us at <strong>+234 703 446 901</strong></p>
+                    <div class="social-buttons">
+                        <a href="#" class="social-btn facebook" onclick="shareToFacebook()">
+                            <i class="fab fa-facebook-f"></i> Facebook
+                        </a>
+                        <a href="#" class="social-btn twitter" onclick="shareToTwitter()">
+                            <i class="fab fa-twitter"></i> Twitter
+                        </a>
+                        <a href="#" class="social-btn instagram" onclick="shareToInstagram()">
+                            <i class="fab fa-instagram"></i> Instagram
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Notification -->
+    <div id="notification" class="notification"></div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>JEMERAD Catering</h3>
+                    <p>Founded by Attah John, Otupko's premier institution for catering and culinary education, dedicated to nurturing the next generation of culinary professionals through world-class training and mentorship.</p>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="index.html#about">About Us</a></li>
+                        <li><a href="index.html#programs">Programs</a></li>
+                        <li><a href="index.html#contact">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Contact Info</h3>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-map-marker-alt"></i> 123 Culinary Avenue, GRA, Otupko</li>
+                        <li><i class="fas fa-phone-alt"></i> +234 703 446 901</li>
+                        <li><i class="fas fa-envelope"></i> info@jemeralcatering.edu.ng</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2025 JEMERAD Catering Services. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Show notification function
+        function showNotification(message, type) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = 'notification ' + type;
+            notification.style.display = 'block';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 5000);
+        }
+        
+        // Show auth modal
+        function showAuthModal() {
+            document.getElementById('authModal').classList.add('active');
+        }
+        
+        // Hide auth modal
+        function hideAuthModal() {
+            document.getElementById('authModal').classList.remove('active');
+        }
+        
+        // Complete module
+        function completeModule(moduleNumber) {
+            showNotification(`Module ${moduleNumber} marked as completed! Great job!`, 'success');
+        }
+        
+        // Social sharing functions
+        function shareToFacebook() {
+            showNotification('Share this achievement on Facebook!', 'success');
+        }
+        
+        function shareToTwitter() {
+            showNotification('Share this achievement on Twitter!', 'success');
+        }
+        
+        function shareToInstagram() {
+            showNotification('Share this achievement on Instagram!', 'success');
+        }
+        
+        // Access form submission
+        document.getElementById('accessForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const accessCode = document.getElementById('accessCode').value;
+            
+            // Verify the access code against stored codes
+            const courseCodeData = localStorage.getItem(`courseCode_${accessCode}`);
+            
+            if (courseCodeData) {
+                const codeInfo = JSON.parse(courseCodeData);
+                
+                // Hide auth modal
+                hideAuthModal();
+                
+                // Show course dashboard
+                document.getElementById('courseDashboard').style.display = 'block';
+                
+                // Show logout button
+                document.getElementById('logoutBtn').style.display = 'inline-block';
+                
+                // Show welcome message
+                document.getElementById('welcomeUser').textContent = `Welcome, ${codeInfo.fullName}!`;
+                
+                // Show user details
+                document.getElementById('userDetails').innerHTML = `
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <strong>Access Code:</strong> ${accessCode}
+                        </div>
+                        <div style="color: green;">
+                            <i class="fas fa-check-circle"></i> Verified
+                        </div>
+                    </div>
+                    <div style="margin-top: 10px; font-size: 0.9rem; color: #5D4037;">
+                        <strong>Student:</strong> ${codeInfo.fullName}<br>
+                        <strong>Email:</strong> ${codeInfo.email}
+                    </div>
+                `;
+                
+                showNotification('Access granted! Welcome to your course.', 'success');
+            } else {
+                showNotification('Invalid access code. Please check your code and try again.', 'error');
+            }
+        });
+        
+        // Logout function
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            document.getElementById('courseDashboard').style.display = 'none';
+            document.getElementById('logoutBtn').style.display = 'none';
+            document.getElementById('welcomeUser').textContent = '';
+            document.getElementById('accessForm').reset();
+            showNotification('You have been logged out', 'success');
+        });
+        
+        // Close modal when clicking outside
+        document.getElementById('authClose').addEventListener('click', hideAuthModal);
+        
+        // Show auth modal when page loads
+        window.addEventListener('load', function() {
+            showAuthModal();
+        });
+    </script>
+</body>
+</html>

@@ -2145,8 +2145,7 @@
 </head>
 <body>
     <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <!-- Firebase scripts removed as per user request -->
     
     <script>
         // Show notification
@@ -2197,67 +2196,11 @@
             return notification;
         }
         
-        // Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyCwYQ4ZvyTmQfsrChsuLuRDm37X01V6ph8",
-  authDomain: "bandix-1bd74.firebaseapp.com",
-  projectId: "bandix-1bd74",
-  storageBucket: "bandix-1bd74.firebasestorage.app",
-  messagingSenderId: "667083449973",
-  appId: "1:667083449973:web:b33aa0e1e6309d1c9e3a3c",
-  measurementId: "G-H508GWV36J"
-        };
-
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
+        // Firebase configuration removed as per user request
     </script>
     
     <script>
-        // Firebase Auth State Observer
-        firebase.auth().onAuthStateChanged(function(user) {
-            if (user) {
-                // User is signed in
-                // Check if user has admin permissions
-                checkUserPermissions(user.uid).then(hasPermission => {
-                    showDashboard(user.displayName || user.email, hasPermission);
-                });
-            } else {
-                // User is signed out
-                // Keep the landing page visible
-                console.log('User is signed out');
-            }
-        });
-        
-        // Check if user has admin permissions
-        function checkUserPermissions(uid) {
-            // In a real implementation, this would check a database
-            // For demo purposes, we'll simulate this with localStorage
-            return new Promise((resolve) => {
-                // Check if this is the first user (admin)
-                const isFirstUser = localStorage.getItem('first_user_registered') !== 'true';
-                if (isFirstUser) {
-                    // Grant admin permissions to the first user
-                    localStorage.setItem(`user_permissions_${uid}`, 'admin');
-                    localStorage.setItem('first_user_registered', 'true');
-                    resolve(true);
-                } else {
-                    // Check if user has been granted admin permissions
-                    const userPermissions = localStorage.getItem(`user_permissions_${uid}`);
-                    if (userPermissions === 'admin') {
-                        resolve(true);
-                    } else {
-                        // By default, new users don't have admin permissions
-                        resolve(false);
-                    }
-                }
-            });
-        }
-        
-        // Grant admin permissions to a user (admin function)
-        function grantAdminPermissions(uid) {
-            localStorage.setItem(`user_permissions_${uid}`, 'admin');
-        }
+        // Firebase code removed as per user request
     </script>
     <!-- Header -->
     <header id="header">
@@ -2270,15 +2213,14 @@
                     <li><a href="#about">About</a></li>
                     <li><a href="#programs">Programs</a></li>
                     <li><a href="#facilities">Facilities</a></li>
-                    <li><a href="#videos">Course Videos</a></li>
+                    <li><a href="course.html">Course Videos</a></li>
                     <li><a href="#testimonials">Success Stories</a></li>
+                    <li><a href="admin.html" target="_blank">Admin</a></li>
                     <li><a href="#contact">Contact</a></li>
                 </ul>
             </nav>
             
             <div class="header-actions">
-                <button class="btn btn-outline" id="loginBtn">Login</button>
-                <button class="btn btn-gold" id="registerBtn">Register</button>
                 <button class="mobile-toggle" id="mobileToggle">
                     <i class="fas fa-bars"></i>
                 </button>
@@ -2298,11 +2240,11 @@
                 <li><a href="#about">About</a></li>
                 <li><a href="#programs">Programs</a></li>
                 <li><a href="#facilities">Facilities</a></li>
-                <li><a href="#videos">Course Videos</a></li>
+                <li><a href="course.html">Course Videos</a></li>
                 <li><a href="#testimonials">Success Stories</a></li>
+                <li><a href="admin.html" target="_blank">Admin</a></li>
                 <li><a href="#contact">Contact</a></li>
-                <li><button id="mobileLoginBtn" style="width: 100%; margin-bottom: 10px;" class="btn btn-outline">Login</button></li>
-                <li><button id="mobileRegisterBtn" style="width: 100%; background: var(--gold); color: var(--dark);">Register</button></li>
+
             </ul>
         </nav>
     </div>
@@ -2315,7 +2257,7 @@
                 <p>Transform your passion for food into a thriving career with Nigeria's premier catering institution. Our comprehensive program combines hands-on training with real-world experience.</p>
                 <div class="hero-btns">
                     <a href="#programs" class="btn btn-primary">Explore Our Program</a>
-                    <button id="enrollBtn" class="btn btn-secondary" onclick="showEnrollmentInfo()">Enroll Today - ₦80,000</button>
+                    <a href="payment.html" class="btn btn-secondary">Enroll Today - ₦80,000</a>
                 </div>
                 <div class="hero-stats">
                     <div class="stat-item">
@@ -2956,7 +2898,7 @@
                             </div>
                             <div class="contact-text">
                                 <h4>Phone Number</h4>
-                                <p>+234 801 234 5678<br>+234 802 345 6789</p>
+                                <p>+234 703 446 901</p>
                             </div>
                         </div>
                         
@@ -3186,6 +3128,11 @@
                     </div>
                 </div>
                 
+                <div id="userPaymentHistory" style="margin-bottom: 20px; padding: 15px; background: #f0f8ff; border-radius: 8px; display: none;">
+                    <h4 style="color: #8B4513; margin-top: 0;">Your Recent Payments</h4>
+                    <div id="paymentHistoryList"></div>
+                </div>
+                
                 <form id="paymentForm">
                     <div class="form-group">
                         <label for="paymentUsername">Your Username (Must match payment note)</label>
@@ -3265,7 +3212,7 @@
                     <h3>Contact Info</h3>
                     <ul class="footer-contact">
                         <li><i class="fas fa-map-marker-alt"></i> 123 Culinary Avenue, GRA, Otupko</li>
-                        <li><i class="fas fa-phone-alt"></i> +234 801 234 5678</li>
+                        <li><i class="fas fa-phone-alt"></i> +234 703 446 901</li>
                         <li><i class="fas fa-envelope"></i> info@jemeralcatering.edu.ng</li>
                         <li><i class="fas fa-clock"></i> Mon-Fri: 8:00AM - 6:00PM</li>
                     </ul>
@@ -3338,10 +3285,6 @@
         // Authentication System
         const authModal = document.getElementById('authModal');
         const paymentModal = document.getElementById('paymentModal');
-        const loginBtn = document.getElementById('loginBtn');
-        const registerBtn = document.getElementById('registerBtn');
-        const mobileLoginBtn = document.getElementById('mobileLoginBtn');
-        const mobileRegisterBtn = document.getElementById('mobileRegisterBtn');
         const authClose = document.getElementById('authClose');
         const authOverlay = document.getElementById('authOverlay');
         const paymentClose = document.getElementById('paymentClose');
@@ -3378,10 +3321,6 @@
         }
         
         // Event listeners for auth buttons
-        if (loginBtn) loginBtn.addEventListener('click', showLoginModal);
-        if (registerBtn) registerBtn.addEventListener('click', showRegisterModal);
-        if (mobileLoginBtn) mobileLoginBtn.addEventListener('click', showLoginModal);
-        if (mobileRegisterBtn) mobileRegisterBtn.addEventListener('click', showRegisterModal);
         if (authClose) authClose.addEventListener('click', hideModals);
         if (authOverlay) authOverlay.addEventListener('click', hideModals);
         if (paymentClose) paymentClose.addEventListener('click', hideModals);
@@ -3405,9 +3344,59 @@
             if (user) {
                 paymentModal.classList.add('active');
                 document.body.style.overflow = 'hidden';
+                // Reset form when showing modal
+                document.getElementById('paymentForm').reset();
+                document.getElementById('paymentWarning').style.display = 'none';
+                // Show user's payment history
+                showUserPaymentHistory(user.uid);
             } else {
                 showLoginModal();
             }
+        }
+        
+        // Show user's payment history
+        function showUserPaymentHistory(userId) {
+            const paymentHistoryContainer = document.getElementById('userPaymentHistory');
+            const paymentHistoryList = document.getElementById('paymentHistoryList');
+            
+            // Clear previous content
+            paymentHistoryList.innerHTML = '<p>Loading payment history...</p>';
+            paymentHistoryContainer.style.display = 'block';
+            
+            // Query Firestore for user's payments
+            db.collection('payments')
+                .where('userId', '==', userId)
+                .orderBy('timestamp', 'desc')
+                .limit(5)
+                .get()
+                .then((querySnapshot) => {
+                    if (querySnapshot.empty) {
+                        paymentHistoryList.innerHTML = '<p>You have not submitted any payments yet.</p>';
+                        return;
+                    }
+                    
+                    let historyHtml = '';
+                    querySnapshot.forEach((doc) => {
+                        const payment = doc.data();
+                        const date = payment.timestamp ? new Date(payment.timestamp.toDate()).toLocaleString() : 'Unknown date';
+                        const status = payment.verified ? 'Verified' : (payment.status === 'pending_verification' ? 'Pending Verification' : payment.status);
+                        const statusColor = payment.verified ? 'green' : (payment.status === 'pending_verification' ? 'orange' : 'gray');
+                        
+                        historyHtml += `
+                            <div style="border-bottom: 1px solid #eee; padding: 10px 0;">
+                                <div><strong>Reference:</strong> ${payment.transactionRef}</div>
+                                <div><strong>Date:</strong> ${date}</div>
+                                <div><strong>Status:</strong> <span style="color: ${statusColor};">${status}</span></div>
+                            </div>
+                        `;
+                    });
+                    
+                    paymentHistoryList.innerHTML = historyHtml;
+                })
+                .catch((error) => {
+                    console.error('Error fetching payment history: ', error);
+                    paymentHistoryList.innerHTML = '<p>Error loading payment history.</p>';
+                });
         }
         
         // Show enrollment info modal
@@ -3440,288 +3429,11 @@
             showEnrollmentInfo();
         });
         
-        // Firebase Login
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
-            
-            firebase.auth().signInWithEmailAndPassword(email, password)
-                .then((userCredential) => {
-                    // Signed in
-                    const user = userCredential.user;
-                    // Store user ID in localStorage for admin access
-                    localStorage.setItem('current_user_id', user.uid);
-                    hideModals();
-                    // Check if user has video access
-                    checkUserPermissions(user.uid).then(hasPermission => {
-                        showDashboard(user.email, hasPermission);
-                    });
-                    console.log('Login successful:', user);
-                })
-                .catch((error) => {
-                    const errorCode = error.code;
-                    const errorMessage = error.message;
-                    showNotification('Login error: ' + errorMessage, 'error');
-                    console.error('Login error:', error);
-                });
-        });
+        // Firebase authentication code removed as per user request
         
-        // Firebase Registration
-        document.getElementById('registerForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const name = document.getElementById('registerName').value;
-            const email = document.getElementById('registerEmail').value;
-            const phone = document.getElementById('registerPhone').value;
-            const password = document.getElementById('registerPassword').value;
-            const confirmPassword = document.getElementById('registerConfirmPassword').value;
-            
-            if (password !== confirmPassword) {
-                showNotification('Passwords do not match!', 'error');
-                return;
-            }
-            
-            firebase.auth().createUserWithEmailAndPassword(email, password)
-                .then((userCredential) => {
-                    // Signed in
-                    const user = userCredential.user;
-                    // Store user ID in localStorage for admin access
-                    localStorage.setItem('current_user_id', user.uid);
-                    // Update user profile with name
-                    return user.updateProfile({
-                        displayName: name
-                    });
-                })
-                .then(() => {
-                    hideModals();
-                    showDashboard(name, false); // New users don't have video access by default
-                    console.log('Registration successful');
-                })
-                .catch((error) => {
-                    const errorCode = error.code;
-                    const errorMessage = error.message;
-                    showNotification('Registration error: ' + errorMessage, 'error');
-                    console.error('Registration error:', error);
-                });
-        });
+        // Show dashboard function removed as per user request
         
-        // Show dashboard
-        function showDashboard(userName, hasVideoAccess = false) {
-            // Hide all sections except dashboard
-            document.querySelectorAll('section:not(.dashboard)').forEach(section => {
-                section.style.display = 'none';
-            });
-            
-            // Show dashboard
-            document.getElementById('dashboard').style.display = 'block';
-            
-            // Update user info
-            document.getElementById('studentName').textContent = userName.split(' ')[0] || userName;
-            
-            // Handle video access
-            handleVideoAccess(hasVideoAccess);
-            
-            // Check if user is admin and show admin panel
-            checkIfAdmin();
-            
-            // Show user ID for admin reference
-            showUserId();
-            
-            // Load video progress and update progress bar
-            setTimeout(loadVideoProgress, 100);
-            
-            // Load recently watched video
-            setTimeout(loadRecentlyWatched, 150);
-            
-            // Update navigation
-            setTimeout(updateNavigationForDashboard, 200);
-        }
-        
-        // Show user ID for admin reference
-        function showUserId() {
-            const user = firebase.auth().currentUser;
-            if (!user) return;
-            
-            // Add user ID and payment info to dashboard welcome section
-            const welcomeSection = document.querySelector('.dashboard-welcome');
-            if (welcomeSection && !document.getElementById('userIdDisplay')) {
-                const userIdDiv = document.createElement('div');
-                userIdDiv.id = 'userIdDisplay';
-                userIdDiv.style.marginTop = '15px';
-                userIdDiv.style.padding = '10px';
-                userIdDiv.style.backgroundColor = '#FFF8F0';
-                userIdDiv.style.borderRadius = '8px';
-                userIdDiv.style.fontSize = '0.9rem';
-                userIdDiv.innerHTML = `
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <div>
-                            <strong>User ID:</strong> ${user.uid.substring(0, 10)}... 
-                            <span style="color: #8B4513; font-size: 0.8rem;">(Share with admin for video access)</span>
-                        </div>
-                        <button class="btn btn-outline" onclick="showPaymentModal()" style="padding: 5px 10px; font-size: 0.8rem;">Make Payment</button>
-                    </div>
-                `;
-                welcomeSection.appendChild(userIdDiv);
-            }
-        }
-        
-        // Check if user is admin and show admin panel
-        function checkIfAdmin() {
-            const user = firebase.auth().currentUser;
-            if (!user) return;
-            
-            checkUserPermissions(user.uid).then(isAdmin => {
-                if (isAdmin) {
-                    showAdminPanel();
-                    showAdminButton();
-                }
-            });
-        }
-        
-        // Show admin button in header
-        function showAdminButton() {
-            const headerActions = document.querySelector('.header-actions');
-            if (headerActions && !document.getElementById('adminBtn')) {
-                const adminBtn = document.createElement('button');
-                adminBtn.id = 'adminBtn';
-                adminBtn.className = 'btn btn-gold';
-                adminBtn.textContent = 'Admin';
-                adminBtn.style.marginRight = '10px';
-                adminBtn.onclick = function() {
-                    // Scroll to admin panel or show a modal
-                    showNotification('Admin panel is at the bottom of your dashboard', 'info');
-                };
-                
-                // Insert before the welcome span
-                headerActions.insertBefore(adminBtn, headerActions.firstChild);
-            }
-        }
-        
-        // Show admin panel
-        function showAdminPanel() {
-            // Check if admin panel already exists
-            if (document.getElementById('adminPanel')) return;
-            
-            const dashboardGrid = document.querySelector('.dashboard-grid');
-            
-            const adminCard = document.createElement('div');
-            adminCard.className = 'dashboard-card';
-            adminCard.id = 'adminPanel';
-            adminCard.innerHTML = `
-                <h4><i class="fas fa-user-shield"></i> Admin Panel</h4>
-                <div style="margin-top: 20px;">
-                    <h5>Grant Video Access</h5>
-                    <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-                        <input type="text" id="userIdInput" placeholder="User ID" class="form-control" style="flex: 1;">
-                        <button class="btn btn-primary" onclick="grantVideoAccess()">Grant Access</button>
-                    </div>
-                    <p style="font-size: 0.9rem; color: #5D4037;">Enter a user's ID to grant them video access permissions.</p>
-                </div>
-                <div style="margin-top: 20px;">
-                    <h5>User Management</h5>
-                    <button class="btn btn-secondary" onclick="listAllUsers()" style="margin-bottom: 15px;">List All Users</button>
-                    <div id="userList" style="max-height: 200px; overflow-y: auto; background: #FFF8F0; padding: 10px; border-radius: 8px; display: none;"></div>
-                </div>
-                <div style="margin-top: 20px;">
-                    <h5>Payment Verification</h5>
-                    <button class="btn btn-secondary" onclick="listPendingPayments()" style="margin-bottom: 15px;">View Pending Payments</button>
-                    <div id="paymentList" style="max-height: 200px; overflow-y: auto; background: #FFF8F0; padding: 10px; border-radius: 8px; display: none;"></div>
-                </div>
-                <div style="margin-top: 20px;">
-                    <h5>Assignment Review</h5>
-                    <button class="btn btn-secondary" onclick="listPendingAssignments()" style="margin-bottom: 15px;">View Pending Assignments</button>
-                    <div id="assignmentList" style="max-height: 200px; overflow-y: auto; background: #FFF8F0; padding: 10px; border-radius: 8px; display: none;"></div>
-                </div>
-            `;
-            
-            dashboardGrid.appendChild(adminCard);
-        }
-        
-        // List all users (from localStorage)
-        function listAllUsers() {
-            const userList = document.getElementById('userList');
-            userList.innerHTML = '';
-            userList.style.display = 'block';
-            
-            // Get all user permissions from localStorage
-            const users = [];
-            for (let i = 0; i < localStorage.length; i++) {
-                const key = localStorage.key(i);
-                if (key.startsWith('user_permissions_')) {
-                    const userId = key.replace('user_permissions_', '');
-                    const hasPermission = localStorage.getItem(key) === 'admin';
-                    users.push({ id: userId, isAdmin: hasPermission });
-                }
-            }
-            
-            if (users.length === 0) {
-                userList.innerHTML = '<p>No users found.</p>';
-                return;
-            }
-            
-            const userListHtml = users.map(user => `
-                <div style="padding: 8px; border-bottom: 1px solid #e0d8d0; display: flex; justify-content: space-between; align-items: center;">
-                    <div>
-                        <div style="font-weight: bold; font-size: 0.9rem;">${user.id.substring(0, 10)}...</div>
-                        <div style="font-size: 0.8rem; color: #8B4513;">${user.isAdmin ? 'Admin' : 'Regular User'}</div>
-                    </div>
-                    <div>
-                        ${user.isAdmin ? 
-                          '<span style="color: green; font-size: 0.8rem;">Has Access</span>' : 
-                          `<button class="btn btn-outline" style="padding: 4px 8px; font-size: 0.8rem;" onclick="grantVideoAccessToUser('${user.id}')">Grant Access</button>`}
-                    </div>
-                </div>
-            `).join('');
-            
-            userList.innerHTML = userListHtml;
-        }
-        
-        // Grant video access to a specific user
-        function grantVideoAccessToUser(userId) {
-            grantAdminPermissions(userId);
-            showNotification(`Video access granted to user ${userId.substring(0, 10)}...`, 'success');
-            // Refresh the user list
-            listAllUsers();
-        }
-        
-        // List pending payments
-        function listPendingPayments() {
-            const paymentList = document.getElementById('paymentList');
-            paymentList.innerHTML = '';
-            paymentList.style.display = 'block';
-            
-            // Get all payment info from localStorage
-            const payments = [];
-            for (let i = 0; i < localStorage.length; i++) {
-                const key = localStorage.key(i);
-                if (key.startsWith('payment_')) {
-                    const paymentData = JSON.parse(localStorage.getItem(key));
-                    payments.push(paymentData);
-                }
-            }
-            
-            if (payments.length === 0) {
-                paymentList.innerHTML = '<p>No pending payments found.</p>';
-                return;
-            }
-            
-            const paymentListHtml = payments.map(payment => `
-                <div style="padding: 8px; border-bottom: 1px solid #e0d8d0;">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <div>
-                            <div style="font-weight: bold; font-size: 0.9rem;">Username: ${payment.username}</div>
-                            <div style="font-size: 0.8rem; color: #8B4513;">Ref: ${payment.transactionRef}</div>
-                            <div style="font-size: 0.8rem; color: #5D4037;">${new Date(payment.timestamp).toLocaleString()}</div>
-                        </div>
-                        <div>
-                            <button class="btn btn-primary" style="padding: 4px 8px; font-size: 0.8rem;" onclick="verifyPayment('${payment.userId}')">Verify</button>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-            
-            paymentList.innerHTML = paymentListHtml;
-        }
+        // Admin panel functions removed as per user request
         
         // List pending assignments
         function listPendingAssignments() {
@@ -3761,10 +3473,105 @@
         }
         
         // Verify payment (in a real app, this would update a database)
-        function verifyPayment(userId) {
+        function verifyPayment(userId, paymentId = null) {
             // In a real implementation, this would update the payment status in a database
-            // For demo, we'll just show an alert
-            showNotification(`Payment for user ${userId.substring(0, 10)}... has been verified!\n\nIn a real application, this would grant course access to the user.`, 'success');
+            // For demo, we'll grant video access to the user and mark payment as verified
+            
+            // If we have a specific payment ID, use that. Otherwise find the most recent payment
+            let paymentQuery;
+            if (paymentId) {
+                // Update specific payment by ID
+                paymentQuery = Promise.resolve({
+                    docs: [{ id: paymentId }]
+                });
+            } else {
+                // Find most recent payment for user
+                paymentQuery = db.collection('payments')
+                    .where('userId', '==', userId)
+                    .orderBy('timestamp', 'desc')
+                    .limit(1)
+                    .get();
+            }
+            
+            paymentQuery.then((querySnapshot) => {
+                if (!querySnapshot.empty) {
+                    const doc = querySnapshot.docs[0];
+                    // Update payment status in Firestore
+                    return db.collection('payments').doc(doc.id).update({
+                        status: 'verified',
+                        verified: true
+                    });
+                } else {
+                    throw new Error('No payment found for user');
+                }
+            })
+            .then(() => {
+                // Grant video access to the user
+                grantAdminPermissions(userId);
+                
+                // Alternative method: Generate access token
+                generateAccessToken(userId);
+                
+                showNotification(`Payment for user ${userId.substring(0, 10)}... has been verified and video access has been granted!`, 'success');
+                
+                // Refresh the payment list
+                if (typeof listPendingPayments === 'function') {
+                    setTimeout(listPendingPayments, 1000);
+                }
+            })
+            .catch((error) => {
+                console.error('Error verifying payment: ', error);
+                showNotification('Error verifying payment. Please try again.', 'error');
+            });
+        }
+        
+        // Alternative method: Generate access token for user
+        function generateAccessToken(userId) {
+            // Create a simple access token
+            const token = btoa(userId + ':' + Date.now());
+            
+            // Store token in localStorage
+            const tokens = JSON.parse(localStorage.getItem('video_access_tokens') || '{}');
+            tokens[userId] = {
+                token: token,
+                timestamp: Date.now(),
+                expires: Date.now() + (30 * 24 * 60 * 60 * 1000) // 30 days
+            };
+            localStorage.setItem('video_access_tokens', JSON.stringify(tokens));
+            
+            console.log('Access token generated for user:', userId);
+        }
+        
+        // Alternative method: Validate access token
+        function validateAccessToken(userId) {
+            const tokens = JSON.parse(localStorage.getItem('video_access_tokens') || '{}');
+            
+            if (tokens[userId]) {
+                const tokenData = tokens[userId];
+                
+                // Check if token is expired
+                if (tokenData.expires > Date.now()) {
+                    return true;
+                } else {
+                    // Remove expired token
+                    delete tokens[userId];
+                    localStorage.setItem('video_access_tokens', JSON.stringify(tokens));
+                }
+            }
+            
+            return false;
+        }
+        
+        // Send real-time notification to admin
+        function sendAdminNotification(userId, message) {
+            // In a real implementation, this would send a notification to admins
+            // For now, we'll just log it
+            console.log('Admin notification:', message, 'User ID:', userId);
+            
+            // If we're in an admin context, show the notification
+            if (document.getElementById('adminPanel')) {
+                showNotification(message, 'info');
+            }
         }
         
         // Grant video access to a user
@@ -3776,73 +3583,47 @@
             }
             
             grantAdminPermissions(userId);
+            
+            // Alternative method: Generate access token
+            generateAccessToken(userId);
+            
             showNotification(`Video access granted to user ${userId.substring(0, 10)}...`, 'success');
             document.getElementById('userIdInput').value = '';
         }
         
-        // Handle video access based on user permissions and payment status
-        function handleVideoAccess(hasAccess) {
-            const moduleVideos = document.querySelectorAll('.module-video');
-            
-            // Check if user has paid for the course
-            const user = firebase.auth().currentUser;
-            let hasPaid = false;
-            
-            if (user) {
-                const paymentInfo = localStorage.getItem(`payment_${user.uid}`);
-                if (paymentInfo) {
-                    const payment = JSON.parse(paymentInfo);
-                    // In a real implementation, this would check if payment is verified
-                    // For demo, we'll assume if payment info exists, user has paid
-                    hasPaid = true;
-                }
+        // Alternative method: Manual access grant without payment
+        function grantDirectAccess() {
+            const userId = document.getElementById('userIdInput').value;
+            if (!userId) {
+                showNotification('Please enter a user ID', 'error');
+                return;
             }
             
-            // Don't replace existing video content, just check access
-            if (hasAccess && hasPaid) {
-                // User has access to videos and has paid
-                // Videos are already in place, just ensure they're accessible
-                console.log('User has access to videos');
-            } else if (hasAccess && !hasPaid) {
-                // User has admin access but hasn't paid
-                moduleVideos.forEach(videoContainer => {
-                    // Clear existing content
-                    videoContainer.innerHTML = '';
-                    const message = document.createElement('div');
-                    message.style.padding = '20px';
-                    message.style.backgroundColor = '#FFF8F0';
-                    message.style.borderRadius = '10px';
-                    message.style.textAlign = 'center';
-                    message.style.marginTop = '10px';
-                    message.innerHTML = `
-                        <i class="fas fa-exclamation-triangle" style="font-size: 2rem; color: #8B4513; margin-bottom: 10px;"></i>
-                        <h4 style="color: #8B4513; margin-bottom: 10px;">Payment Required</h4>
-                        <p style="color: #5D4037; margin-bottom: 15px;">You must complete payment to access course videos. Please visit the payment section to enroll.</p>
-                        <button class="btn btn-primary" onclick="showPaymentModal()" style="padding: 10px 20px;">Make Payment</button>
-                    `;
-                    videoContainer.appendChild(message);
-                });
-            } else if (!hasAccess) {
-                // User doesn't have admin permission
-                moduleVideos.forEach(videoContainer => {
-                    // Clear existing content
-                    videoContainer.innerHTML = '';
-                    const message = document.createElement('div');
-                    message.style.padding = '20px';
-                    message.style.backgroundColor = '#FFF8F0';
-                    message.style.borderRadius = '10px';
-                    message.style.textAlign = 'center';
-                    message.style.marginTop = '10px';
-                    message.innerHTML = `
-                        <i class="fas fa-lock" style="font-size: 2rem; color: #8B4513; margin-bottom: 10px;"></i>
-                        <h4 style="color: #8B4513; margin-bottom: 10px;">Access Denied</h4>
-                        <p style="color: #5D4037; margin-bottom: 15px;">You need admin permission to view course videos.</p>
-                        <button class="btn btn-primary" onclick="requestVideoAccess()" style="padding: 10px 20px;">Request Access</button>
-                    `;
-                    videoContainer.appendChild(message);
-                });
-            }
+            // Grant admin permissions
+            grantAdminPermissions(userId);
+            
+            // Generate access token
+            generateAccessToken(userId);
+            
+            // Mark as having paid in localStorage (for backward compatibility)
+            const paymentInfo = {
+                userId: userId,
+                username: 'manual_grant',
+                transactionRef: 'manual_' + Date.now(),
+                timestamp: new Date(),
+                status: 'verified',
+                verified: true
+            };
+            
+            const payments = JSON.parse(localStorage.getItem('payments') || '[]');
+            payments.push(paymentInfo);
+            localStorage.setItem('payments', JSON.stringify(payments));
+            
+            showNotification(`Direct video access granted to user ${userId.substring(0, 10)}...`, 'success');
+            document.getElementById('userIdInput').value = '';
         }
+        
+        // Video access functions removed as per user request
         
         // Request video access (in a real app, this would send a request to admin)
         function requestVideoAccess() {
@@ -4272,18 +4053,7 @@
                 headerActions.appendChild(welcomeSpan);
                 headerActions.appendChild(logoutBtn);
                 
-                // Add event listener for logout
-                logoutBtn.addEventListener('click', function() {
-                    firebase.auth().signOut().then(() => {
-                        // Sign-out successful
-                        console.log('User signed out');
-                        location.reload();
-                    }).catch((error) => {
-                        // An error happened
-                        console.error('Sign out error:', error);
-                        showNotification('Error signing out', 'error');
-                    });
-                });
+                // Logout functionality removed as per user request
             }
             
             // Update main navigation - remove unnecessary items for logged in users
@@ -4310,10 +4080,6 @@
             // Update mobile menu for better compactness
             if (mobileNav) {
                 // Clear existing auth buttons
-                const loginLi = document.querySelector('#mobileLoginBtn').parentElement;
-                const registerLi = document.querySelector('#mobileRegisterBtn').parentElement;
-                if (loginLi) loginLi.remove();
-                if (registerLi) registerLi.remove();
                 
                 // Clear existing navigation items
                 while (mobileNav.firstChild) {
@@ -4358,21 +4124,7 @@
                 logoutLi.innerHTML = '<button id="mobileLogoutBtn" style="width: 100%; background: var(--primary); color: white; margin-top: 8px; padding: 10px;"><i class="fas fa-sign-out-alt"></i> Logout</button>';
                 mobileNav.appendChild(logoutLi);
                 
-                // Add event listener for mobile logout
-                const mobileLogoutBtn = document.getElementById('mobileLogoutBtn');
-                if (mobileLogoutBtn) {
-                    mobileLogoutBtn.addEventListener('click', function() {
-                        firebase.auth().signOut().then(() => {
-                            // Sign-out successful
-                            console.log('User signed out');
-                            location.reload();
-                        }).catch((error) => {
-                            // An error happened
-                            console.error('Sign out error:', error);
-                            showNotification('Error signing out', 'error');
-                        });
-                    });
-                }
+                // Mobile logout functionality removed as per user request
             }
         }
         
@@ -4388,36 +4140,94 @@
                 return;
             }
             
-            // In a real implementation, you would save this payment info to a database
-            // and manually verify the payment before granting course access
+            // Disable submit button during submission
+            const submitButton = this.querySelector('button[type="submit"]');
             
-            // Store payment info in localStorage for demo purposes
+            if (!submitButton) {
+                showNotification('Error: Could not find submit button. Please try again.', 'error');
+                return;
+            }
+            
+            const originalButtonText = submitButton.textContent;
+            submitButton.disabled = true;
+            submitButton.textContent = 'Submitting...';
+            
+            // Set a timeout to ensure button is re-enabled even if something goes wrong
+            const buttonTimeout = setTimeout(() => {
+                if (submitButton) {
+                    submitButton.disabled = false;
+                    submitButton.textContent = originalButtonText;
+                }
+            }, 5000); // 5 seconds timeout
+            
+            // Store payment info in Firestore
             const user = firebase.auth().currentUser;
+            
             if (user) {
                 const paymentInfo = {
                     userId: user.uid,
                     username: username,
                     transactionRef: transactionRef,
-                    timestamp: new Date().toISOString(),
-                    status: 'pending_verification'
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                    status: 'pending_verification',
+                    verified: false
                 };
                 
-                localStorage.setItem(`payment_${user.uid}`, JSON.stringify(paymentInfo));
+                // Simple function to re-enable button
+                function enableButton() {
+                    clearTimeout(buttonTimeout);
+                    if (submitButton) {
+                        submitButton.disabled = false;
+                        submitButton.textContent = originalButtonText;
+                    }
+                }
                 
-                // Show warning message
-                document.getElementById('paymentWarning').style.display = 'block';
-                
-                showNotification('Payment confirmation submitted!\n\nYour payment will be manually verified within 24 hours. You will receive an email notification once your enrollment is confirmed and course access is granted.\n\nIMPORTANT: Ensure your username was included in the payment note, or your enrollment will be denied.', 'success');
-                
-                // Hide modal after 3 seconds
-                setTimeout(() => {
-                    hideModals();
-                }, 3000);
+                // Simpler approach - store in localStorage and notify admin
+                try {
+                    // Store payment info in localStorage as backup
+                    const payments = JSON.parse(localStorage.getItem('payments') || '[]');
+                    payments.push(paymentInfo);
+                    localStorage.setItem('payments', JSON.stringify(payments));
+                    
+                    // Also try to store in Firestore
+                    if (typeof db !== 'undefined' && db.collection) {
+                        db.collection('payments').add(paymentInfo)
+                            .then((docRef) => {
+                                console.log('Payment document written with ID: ', docRef.id);
+                            })
+                            .catch((error) => {
+                                console.error('Error adding payment to Firestore: ', error);
+                            });
+                    }
+                    
+                    // Show success message
+                    document.getElementById('paymentWarning').style.display = 'block';
+                    showNotification('Payment information recorded!\n\nPlease contact admin with your username and transaction reference to get immediate access to course videos.', 'success');
+                    
+                    // Send notification to admin
+                    console.log('New payment submitted:', paymentInfo);
+                    
+                    // Hide modal after 3 seconds
+                    setTimeout(() => {
+                        hideModals();
+                        enableButton();
+                    }, 3000);
+                } catch (error) {
+                    console.error('Error recording payment: ', error);
+                    showNotification('Error recording payment. Please contact admin directly with your payment details.', 'error');
+                    enableButton();
+                }
             } else {
+                clearTimeout(buttonTimeout);
                 showNotification('You must be logged in to submit payment confirmation.', 'error');
+                // Re-enable submit button
+                if (submitButton) {
+                    submitButton.disabled = false;
+                    submitButton.textContent = originalButtonText;
+                }
             }
         });
-
+        
         // Form submission
         document.getElementById('inquiryForm').addEventListener('submit', function(e) {
             e.preventDefault();

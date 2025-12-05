@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - JEMERAD Catering</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #8B4513;
+            --secondary: #5D4037;
+            --accent: #D4AF37;
+            --light: #FFF8F0;
+            --dark: #3E2723;
+            --success: #4CAF50;
+            --warning: #FF9800;
+            --danger: #f44336;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        header {
+            background: var(--dark);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--accent);
+            text-decoration: none;
+        }
+        
+        .logo i {
+            margin-right: 10px;
+        }
+        
+        .logo span {
+            color: white;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 25px;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+        
+        nav ul li a:hover {
+            color: var(--accent);
+        }
+        
+        .hero {
+            background: linear-gradient(rgba(139, 69, 19, 0.8), rgba(93, 64, 55, 0.9)), url('https://images.unsplash.com/photo-1490818387583-1baba5e638af?ixlib=rb-4.0.3') no-repeat center center/cover;
+            color: white;
+            text-align: center;
+            padding: 80px 0;
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 30px;
+        }
+        
+        .section {
+            padding: 60px 0;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .section-header h2 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        
+        .section-header p {
+            font-size: 1.1rem;
+            color: var(--secondary);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .admin-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .search-box {
+            flex: 1;
+            max-width: 400px;
+            position: relative;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 12px 20px 12px 40px;
+            border: 2px solid #ddd;
+            border-radius: 30px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        .search-box input:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+        
+        .search-box i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+        }
+        
+        .filter-controls {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+        
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        th {
+            background: var(--light);
+            color: var(--primary);
+            font-weight: 700;
+        }
+        
+        tr:hover {
+            background: #f9f9f9;
+        }
+        
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        
+        .status-pending {
+            background: #fff3e0;
+            color: #ef6c00;
+        }
+        
+        .status-verified {
+            background: #e8f5e9;
+            color: #388e3c;
+        }
+        
+        .status-rejected {
+            background: #ffebee;
+            color: #d32f2f;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 0.9rem;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+            gap: 10px;
+        }
+        
+        .page-link {
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            text-decoration: none;
+            color: var(--primary);
+        }
+        
+        .page-link.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        .page-link:hover:not(.active) {
+            background: #f5f5f5;
+        }
+        
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 50px 0 20px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .footer-column h3 {
+            color: var(--accent);
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-links a {
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #5D4037;
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            nav ul li {
+                margin: 5px 10px;
+            }
+            
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .controls {
+                flex-direction: column;
+            }
+            
+            .search-box {
+                max-width: 100%;
+            }
+            
+            .filter-controls {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            th, td {
+                padding: 10px 8px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <a href="index.html" class="logo"><i class="fas fa-utensils"></i>JEMERAD <span>Catering</span></a>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="index.html#about">About</a></li>
+                    <li><a href="index.html#programs">Programs</a></li>
+                    <li><a href="index.html#contact">Contact</a></li>
+                    <li><a href="payment.html">Payment</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Admin Dashboard</h1>
+                <p>Manage student enrollments, payments, and course access</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Admin Section -->
+    <section class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Student Enrollments</h2>
+                <p>Review and manage student enrollment requests</p>
+            </div>
+            
+            <div class="admin-container">
+                <!-- Manual Course Code Creation Section -->
+                <div style="background: var(--light); padding: 20px; border-radius: 10px; margin-bottom: 30px; border: 1px solid var(--accent);">
+                    <h3 style="color: var(--primary); margin-top: 0;"><i class="fas fa-key"></i> Create Course Code Manually</h3>
+                    <p style="color: var(--secondary); margin-bottom: 15px;">Create course codes even without pending enrollments</p>
+                    
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end;">
+                        <div>
+                            <label for="manualStudentName" style="display: block; margin-bottom: 5px; font-weight: 600; color: var(--secondary);">Student Name</label>
+                            <input type="text" id="manualStudentName" placeholder="Enter student name" style="padding: 10px; border: 2px solid #ddd; border-radius: 5px; width: 200px;">
+                        </div>
+                        
+                        <div>
+                            <label for="manualStudentEmail" style="display: block; margin-bottom: 5px; font-weight: 600; color: var(--secondary);">Student Email</label>
+                            <input type="email" id="manualStudentEmail" placeholder="Enter student email" style="padding: 10px; border: 2px solid #ddd; border-radius: 5px; width: 200px;">
+                        </div>
+                        
+                        <div>
+                            <label for="manualStudentPhone" style="display: block; margin-bottom: 5px; font-weight: 600; color: var(--secondary);">Student Phone</label>
+                            <input type="text" id="manualStudentPhone" placeholder="Enter student phone" style="padding: 10px; border: 2px solid #ddd; border-radius: 5px; width: 150px;">
+                        </div>
+                        
+                        <div>
+                            <label for="manualCourseCode" style="display: block; margin-bottom: 5px; font-weight: 600; color: var(--secondary);">Course Code (8 chars)</label>
+                            <input type="text" id="manualCourseCode" placeholder="Enter 8-char code" maxlength="8" style="padding: 10px; border: 2px solid #ddd; border-radius: 5px; width: 120px; text-transform: uppercase;">
+                        </div>
+                        
+                        <div>
+                            <button class="btn btn-primary" onclick="createManualCourseCode()" style="height: fit-content; padding: 10px 15px;"><i class="fas fa-plus-circle"></i> Create Code</button>
+                        </div>
+                    </div>
+                    
+                    <p style="margin-top: 10px; font-size: 0.9rem; color: #666;"><strong>Note:</strong> This creates a course code that can be used by a student to access the course, even if they haven't enrolled yet.</p>
+                </div>
+                
+                <div class="controls">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchInput" placeholder="Search students...">
+                    </div>
+                    <div class="filter-controls">
+                        <button class="btn btn-outline" id="refreshBtn"><i class="fas fa-sync-alt"></i> Refresh</button>
+                        <button class="btn btn-primary" id="exportBtn"><i class="fas fa-download"></i> Export Data</button>
+                    </div>
+                </div>
+                
+                <table id="enrollmentTable">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Date Submitted</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="enrollmentTableBody">
+                        <!-- Data will be populated by JavaScript -->
+                    </tbody>
+                </table>
+                
+                <div class="pagination">
+                    <a href="#" class="page-link active">1</a>
+                    <a href="#" class="page-link">2</a>
+                    <a href="#" class="page-link">3</a>
+                    <a href="#" class="page-link"><i class="fas fa-chevron-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>JEMERAD Catering</h3>
+                    <p>Founded by Attah John, Otupko's premier institution for catering and culinary education, dedicated to nurturing the next generation of culinary professionals through world-class training and mentorship.</p>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="index.html#about">About Us</a></li>
+                        <li><a href="index.html#programs">Programs</a></li>
+                        <li><a href="index.html#contact">Contact</a></li>
+                        <li><a href="payment.html">Payment</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Contact Info</h3>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-map-marker-alt"></i> 123 Culinary Avenue, GRA, Otupko</li>
+                        <li><i class="fas fa-phone-alt"></i> +234 703 446 901 (WhatsApp)</li>
+                        <li><i class="fas fa-envelope"></i> info@jemeralcatering.edu.ng</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2025 JEMERAD Catering Services. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Sample data for demonstration
+        // In a real application, this would come from a backend API
+        let enrollmentData = [];
+        
+        // Load data from localStorage
+        function loadEnrollmentData() {
+            enrollmentData = [];
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key.startsWith('enrollment_')) {
+                    try {
+                        const data = JSON.parse(localStorage.getItem(key));
+                        data.id = key;
+                        enrollmentData.push(data);
+                    } catch (e) {
+                        console.error('Error parsing enrollment data:', e);
+                    }
+                }
+            }
+            
+            // Sort by timestamp (newest first)
+            enrollmentData.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            
+            renderTable();
+        }
+        
+        // Render table with data
+        function renderTable() {
+            const tbody = document.getElementById('enrollmentTableBody');
+            tbody.innerHTML = '';
+            
+            if (enrollmentData.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">No enrollment data found</td></tr>';
+                return;
+            }
+            
+            enrollmentData.forEach(enrollment => {
+                const row = document.createElement('tr');
+                const date = new Date(enrollment.timestamp);
+                const formattedDate = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+                
+                const courseCodeDisplay = enrollment.courseCode ? `<br><small>Code: <strong>${enrollment.courseCode}</strong></small>` : '';
+                const manualBadge = enrollment.manualCreation ? '<br><span style="background: #FFD700; color: #3E2723; padding: 2px 5px; border-radius: 3px; font-size: 0.7rem;">MANUAL</span>' : '';
+                
+                row.innerHTML = `
+                    <td>${enrollment.fullName}</td>
+                    <td>${enrollment.email}</td>
+                    <td>${enrollment.phone}</td>
+                    <td>${formattedDate}</td>
+                    <td><span class="status-badge status-${enrollment.paymentStatus}">${enrollment.paymentStatus}</span>${courseCodeDisplay}${manualBadge}</td>
+                    <td class="action-buttons">
+                        ${enrollment.paymentStatus === 'pending' ? 
+                          `<div style="display: flex; flex-direction: column; gap: 5px;">
+                              <input type="text" id="manualCode_${enrollment.id}" placeholder="Enter course code" style="padding: 5px; border: 1px solid #ddd; border-radius: 4px; margin-bottom: 5px;" maxlength="8">
+                              <button class="btn btn-small btn-primary" onclick="verifyPaymentWithCode('${enrollment.id}')">Verify & Use Code</button>
+                           </div>` : 
+                          `<div><strong>${enrollment.courseCode || 'N/A'}</strong><br><button class="btn btn-small btn-outline" disabled>Verified</button></div>`}
+                        <button class="btn btn-small btn-outline" onclick="rejectPayment('${enrollment.id}')">Reject</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+        
+        // Generate a unique course code
+        function generateCourseCode() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let code = '';
+            for (let i = 0; i < 8; i++) {
+                code += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return code;
+        }
+        
+        // Create a manual course code without enrollment
+        function createManualCourseCode() {
+            const studentName = document.getElementById('manualStudentName').value.trim();
+            const studentEmail = document.getElementById('manualStudentEmail').value.trim();
+            const studentPhone = document.getElementById('manualStudentPhone').value.trim();
+            const courseCode = document.getElementById('manualCourseCode').value.trim().toUpperCase();
+            
+            // Validate inputs
+            if (!studentName) {
+                alert('Please enter a student name');
+                return;
+            }
+            
+            if (!studentEmail) {
+                alert('Please enter a student email');
+                return;
+            }
+            
+            if (!courseCode) {
+                alert('Please enter a course code');
+                return;
+            }
+            
+            if (courseCode.length !== 8) {
+                alert('Course code must be exactly 8 characters');
+                return;
+            }
+            
+            // Check if course code already exists
+            if (localStorage.getItem(`courseCode_${courseCode}`)) {
+                alert('This course code already exists. Please use a different code.');
+                return;
+            }
+            
+            // Create a fake enrollment ID
+            const fakeEnrollmentId = 'manual_' + Date.now();
+            
+            // Save the course code separately for easy lookup
+            localStorage.setItem(`courseCode_${courseCode}`, JSON.stringify({
+                enrollmentId: fakeEnrollmentId,
+                fullName: studentName,
+                email: studentEmail,
+                phone: studentPhone,
+                generatedAt: new Date().toISOString(),
+                manualCreation: true
+            }));
+            
+            // Also save as a manual entry
+            const manualEntry = {
+                id: fakeEnrollmentId,
+                fullName: studentName,
+                email: studentEmail,
+                phone: studentPhone,
+                timestamp: new Date().toISOString(),
+                paymentStatus: 'verified',
+                courseCode: courseCode,
+                verificationDate: new Date().toISOString(),
+                manualCreation: true
+            };
+            
+            localStorage.setItem(fakeEnrollmentId, JSON.stringify(manualEntry));
+            
+            // Clear the form
+            document.getElementById('manualStudentName').value = '';
+            document.getElementById('manualStudentEmail').value = '';
+            document.getElementById('manualStudentPhone').value = '';
+            document.getElementById('manualCourseCode').value = '';
+            
+            // Refresh the table
+            loadEnrollmentData();
+            
+            alert(`Course code ${courseCode} created successfully for ${studentName}!`);
+        }
+        
+        // Verify payment and set manual course code
+        function verifyPaymentWithCode(id) {
+            const enrollment = enrollmentData.find(item => item.id === id);
+            if (enrollment) {
+                // Get manual course code from input field
+                const codeInput = document.getElementById(`manualCode_${id}`);
+                let courseCode = codeInput ? codeInput.value.trim().toUpperCase() : '';
+                
+                // Validate course code
+                if (!courseCode) {
+                    alert('Please enter a course code');
+                    return;
+                }
+                
+                if (courseCode.length !== 8) {
+                    alert('Course code must be exactly 8 characters');
+                    return;
+                }
+                
+                // Check if course code already exists
+                if (localStorage.getItem(`courseCode_${courseCode}`)) {
+                    alert('This course code already exists. Please use a different code.');
+                    return;
+                }
+                
+                // Add course code to enrollment data
+                enrollment.paymentStatus = 'verified';
+                enrollment.courseCode = courseCode;
+                enrollment.verificationDate = new Date().toISOString();
+                
+                // Save to localStorage
+                localStorage.setItem(id, JSON.stringify(enrollment));
+                
+                // Also save the course code separately for easy lookup
+                localStorage.setItem(`courseCode_${courseCode}`, JSON.stringify({
+                    enrollmentId: id,
+                    fullName: enrollment.fullName,
+                    email: enrollment.email,
+                    phone: enrollment.phone,
+                    generatedAt: enrollment.verificationDate
+                }));
+                
+                loadEnrollmentData();
+                alert(`Payment for ${enrollment.fullName} has been verified! Course code: ${courseCode}`);
+            }
+        }
+        
+        // Original verify payment function (generates code automatically)
+        function verifyPayment(id) {
+            const enrollment = enrollmentData.find(item => item.id === id);
+            if (enrollment) {
+                // Generate a unique course code
+                const courseCode = generateCourseCode();
+                
+                // Add course code to enrollment data
+                enrollment.paymentStatus = 'verified';
+                enrollment.courseCode = courseCode;
+                enrollment.verificationDate = new Date().toISOString();
+                
+                // Save to localStorage
+                localStorage.setItem(id, JSON.stringify(enrollment));
+                
+                // Also save the course code separately for easy lookup
+                localStorage.setItem(`courseCode_${courseCode}`, JSON.stringify({
+                    enrollmentId: id,
+                    fullName: enrollment.fullName,
+                    email: enrollment.email,
+                    phone: enrollment.phone,
+                    generatedAt: enrollment.verificationDate
+                }));
+                
+                loadEnrollmentData();
+                alert(`Payment for ${enrollment.fullName} has been verified! Course code: ${courseCode}`);
+            }
+        }
+        
+        // Reject payment
+        function rejectPayment(id) {
+            const enrollment = enrollmentData.find(item => item.id === id);
+            if (enrollment) {
+                enrollment.paymentStatus = 'rejected';
+                localStorage.setItem(id, JSON.stringify(enrollment));
+                loadEnrollmentData();
+                alert(`Payment for ${enrollment.fullName} has been rejected.`);
+            }
+        }
+        
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const filteredData = enrollmentData.filter(enrollment => 
+                enrollment.fullName.toLowerCase().includes(searchTerm) ||
+                enrollment.email.toLowerCase().includes(searchTerm) ||
+                enrollment.phone.includes(searchTerm)
+            );
+            
+            // Temporarily replace the data for rendering
+            const originalData = enrollmentData;
+            enrollmentData = filteredData;
+            renderTable();
+            enrollmentData = originalData;
+        });
+        
+        // Refresh button
+        document.getElementById('refreshBtn').addEventListener('click', function() {
+            loadEnrollmentData();
+            document.getElementById('searchInput').value = '';
+        });
+        
+        // Export data
+        document.getElementById('exportBtn').addEventListener('click', function() {
+            if (enrollmentData.length === 0) {
+                alert('No data to export');
+                return;
+            }
+            
+            // Convert to CSV
+            let csv = 'Name,Email,Phone,Date Submitted,Status\n';
+            enrollmentData.forEach(enrollment => {
+                const date = new Date(enrollment.timestamp);
+                const formattedDate = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+                csv += `"${enrollment.fullName}","${enrollment.email}","${enrollment.phone}","${formattedDate}","${enrollment.paymentStatus}"\n`;
+            });
+            
+            // Create download link
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.setAttribute('hidden', '');
+            a.setAttribute('href', url);
+            a.setAttribute('download', 'enrollment_data.csv');
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        });
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadEnrollmentData();
+        });
+    </script>
+</body>
+</html>

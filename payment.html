@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enroll in Catering Course - JEMERAD</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #8B4513;
+            --secondary: #5D4037;
+            --gold: #FFD700;
+            --light: #FFF8F0;
+            --dark: #3E2723;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        header {
+            background: white;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        
+        .logo span {
+            color: var(--gold);
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+        
+        nav ul li a {
+            text-decoration: none;
+            color: var(--secondary);
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+        
+        nav ul li a:hover {
+            color: var(--primary);
+        }
+        
+        .hero {
+            background: linear-gradient(rgba(139, 69, 19, 0.8), rgba(93, 64, 55, 0.9)), url('https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 100px 0;
+            text-align: center;
+        }
+        
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .hero h1 span {
+            color: var(--gold);
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 15px 30px;
+            background: var(--gold);
+            color: var(--dark);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid var(--gold);
+            color: var(--gold);
+        }
+        
+        .section {
+            padding: 80px 0;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        
+        .section-header h2 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        
+        .section-header p {
+            font-size: 1.1rem;
+            color: var(--secondary);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .payment-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--secondary);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0d8d0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+        
+        .payment-details {
+            background: var(--light);
+            padding: 25px;
+            border-radius: 10px;
+            margin: 30px 0;
+        }
+        
+        .payment-details h3 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .account-info {
+            display: flex;
+            justify-content: space-between;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .instructions {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 25px 0;
+        }
+        
+        .instructions h4 {
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        
+        .instructions ol {
+            padding-left: 20px;
+        }
+        
+        .instructions li {
+            margin-bottom: 10px;
+        }
+        
+        .whatsapp-btn {
+            background: #25D366;
+            color: white;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px 25px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            margin: 20px 0;
+            transition: all 0.3s ease;
+        }
+        
+        .whatsapp-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3);
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            z-index: 2000;
+            display: none;
+        }
+        
+        .notification.success {
+            background: #4CAF50;
+        }
+        
+        .notification.error {
+            background: #f44336;
+        }
+        
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 50px 0 20px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .footer-column h3 {
+            color: var(--gold);
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-links a {
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: var(--gold);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #5D4037;
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .section {
+                padding: 50px 0;
+            }
+            
+            .payment-container {
+                padding: 25px;
+            }
+            
+            .account-info {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <a href="index.html" class="logo"><i class="fas fa-utensils"></i>JEMERAD <span>Catering</span></a>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="index.html#about">About</a></li>
+                    <li><a href="index.html#programs">Programs</a></li>
+                    <li><a href="index.html#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Enroll in Our <span>Professional Catering</span> Course</h1>
+                <p>Transform your passion for food into a thriving career with Nigeria's premier catering institution. Pay now and start your journey toward culinary excellence.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Payment Section -->
+    <section class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Enrollment & Payment</h2>
+                <p>Complete the form below to enroll in our Professional Catering Chef Program</p>
+            </div>
+            
+            <div class="payment-container">
+                <form id="enrollmentForm">
+                    <div class="form-group">
+                        <label for="fullName">Full Name</label>
+                        <input type="text" id="fullName" class="form-control" placeholder="Enter your full name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" class="form-control" placeholder="Enter your email address" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" class="form-control" placeholder="Enter your phone number" required>
+                    </div>
+                    
+                    <div class="payment-details">
+                        <h3><i class="fas fa-money-bill-wave"></i> Payment Information</h3>
+                        
+                        <div class="account-info">
+                            <div><strong>Account Number:</strong></div>
+                            <div>9876543210</div>
+                        </div>
+                        
+                        <div class="account-info">
+                            <div><strong>Account Name:</strong></div>
+                            <div>JEMERAD Catering Services</div>
+                        </div>
+                        
+                        <div class="account-info">
+                            <div><strong>Bank:</strong></div>
+                            <div>Opay</div>
+                        </div>
+                        
+                        <div class="account-info">
+                            <div><strong>Amount:</strong></div>
+                            <div><strong>₦80,000</strong></div>
+                        </div>
+                    </div>
+                    
+                    <div class="instructions">
+                        <h4><i class="fas fa-list-ol"></i> Enrollment Instructions</h4>
+                        <ol>
+                            <li>Make a payment of <strong>₦80,000</strong> to the Opay account details above</li>
+                            <li>Include your <strong>FULL NAME</strong> in the payment description/note</li>
+                            <li>After payment, click the WhatsApp button below to send your payment proof to <strong>+234 703 446 901</strong></li>
+                            <li>Our team will verify your payment within 24 hours</li>
+                            <li>Upon verification, you'll receive a <strong>unique 8-character course code</strong> via WhatsApp</li>
+                            <li>Use your course code to access the course materials at <a href="course.html" target="_blank">course.html</a></li>
+                        </ol>
+                    </div>
+                    
+                    <div style="text-align: center;">
+                        <button type="submit" class="btn" style="width: 100%; padding: 15px; font-size: 1.1rem;">
+                            <i class="fas fa-check-circle"></i> I've Completed the Form - Proceed to Payment
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Notification -->
+    <div id="notification" class="notification"></div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>JEMERAD Catering</h3>
+                    <p>Founded by Attah John, Otupko's premier institution for catering and culinary education, dedicated to nurturing the next generation of culinary professionals through world-class training and mentorship.</p>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="index.html#about">About Us</a></li>
+                        <li><a href="index.html#programs">Programs</a></li>
+                        <li><a href="index.html#contact">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Contact Info</h3>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-map-marker-alt"></i> 123 Culinary Avenue, GRA, Otupko</li>
+                        <li><i class="fas fa-phone-alt"></i> +234 703 446 901</li>
+                        <li><i class="fas fa-envelope"></i> info@jemeralcatering.edu.ng</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2025 JEMERAD Catering Services. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Show notification function
+        function showNotification(message, type) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = 'notification ' + type;
+            notification.style.display = 'block';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 5000);
+        }
+        
+        // Form submission
+        document.getElementById('enrollmentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const fullName = document.getElementById('fullName').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            
+            if (!fullName || !email || !phone) {
+                showNotification('Please fill in all required fields', 'error');
+                return;
+            }
+            
+            // Store form data in localStorage
+            const formData = {
+                fullName: fullName,
+                email: email,
+                phone: phone,
+                timestamp: new Date().toISOString(),
+                paymentStatus: 'pending'
+            };
+            
+            // Save to localStorage
+            localStorage.setItem('enrollment_' + Date.now(), JSON.stringify(formData));
+            
+            // In a real implementation, you would also send this to a backend service
+            // For demonstration, we'll log it to console
+            console.log('Form data saved:', formData);
+            
+            showNotification('Form submitted successfully! Please proceed with payment and send proof via WhatsApp.', 'success');
+            
+            // Create WhatsApp button dynamically
+            const whatsappSection = document.createElement('div');
+            whatsappSection.style.textAlign = 'center';
+            whatsappSection.style.marginTop = '30px';
+            whatsappSection.innerHTML = `
+                <p style="margin-bottom: 20px; font-size: 1.1rem;">Click the button below to send your payment proof to our WhatsApp:</p>
+                <a href="https://wa.me/2347034466901?text=Hello,%20I'm%20${encodeURIComponent(fullName)}%20(${encodeURIComponent(phone)},%20${encodeURIComponent(email)}).%20I've%20made%20the%20payment%20for%20the%20catering%20course.%20Please%20find%20my%20payment%20proof%20attached." 
+                   class="whatsapp-btn" target="_blank">
+                    <i class="fab fa-whatsapp"></i> Send Payment Proof via WhatsApp
+                </a>
+                <p style="margin-top: 20px; color: #5D4037;">After sending your payment proof, our team will verify it within 24 hours and send you a unique course code to access the course materials. If you have any questions, you can reach us at <strong>+234 703 446 901</strong>.</p>
+            `;
+            
+            // Insert after the form
+            this.parentNode.appendChild(whatsappSection);
+            
+            // Hide the form
+            this.style.display = 'none';
+        });
+    </script>
+</body>
+</html>
