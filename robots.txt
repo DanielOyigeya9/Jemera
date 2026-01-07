@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /admin.html
+Disallow: /admin_login.html
+Disallow: /admin_new.html
+Disallow: /backup/
+
+Sitemap: https://www.jemraacademy.com/sitemap.xml

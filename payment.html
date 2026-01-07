@@ -3,230 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enroll in Catering Course - JEMERA</title>
+    <title>Enroll in Catering Course - JEMRA</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="assets/js/firebase-config.js"></script>
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/opay.js"></script>
     <style>
-        :root {
-            --primary: #8B4513;
-            --secondary: #5D4037;
-            --gold: #FFD700;
-            --light: #FFF8F0;
-            --dark: #3E2723;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
-            color: var(--dark);
-            line-height: 1.6;
-        }
-        
-        .container {
-            width: 90%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 15px;
-        }
-        
-        header {
-            background: white;
-            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-        
-        .header-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 0;
-        }
-        
-        .logo {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--primary);
-            text-decoration: none;
-        }
-        
-        .logo span {
-            color: var(--gold);
-        }
-        
-        nav ul {
-            display: flex;
-            list-style: none;
-            gap: 30px;
-        }
-        
-        nav ul li a {
-            text-decoration: none;
-            color: var(--secondary);
-            font-weight: 600;
-            transition: color 0.3s;
-        }
-        
-        nav ul li a:hover {
-            color: var(--primary);
-        }
-        
+        /* Custom styles for this page */
         .hero {
-            background: linear-gradient(rgba(139, 69, 19, 0.8), rgba(93, 64, 55, 0.9)), url('https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
-            background-size: cover;
-            background-position: center;
+            background: linear-gradient(135deg, var(--primary-700) 0%, var(--primary-900) 100%);
             color: white;
-            padding: 100px 0;
+            padding: var(--spacing-3xl) 0;
             text-align: center;
         }
         
-        .hero-content {
-            max-width: 800px;
-            margin: 0 auto;
+        .hero-title {
+            color: white;
+            margin-bottom: var(--spacing-md);
         }
         
-        .hero h1 {
-            font-size: 3rem;
-            margin-bottom: 20px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-        }
-        
-        .hero h1 span {
-            color: var(--gold);
-        }
-        
-        .hero p {
-            font-size: 1.2rem;
-            margin-bottom: 30px;
-        }
-        
-        .btn {
-            display: inline-block;
-            padding: 15px 30px;
-            background: var(--gold);
-            color: var(--dark);
-            text-decoration: none;
-            border-radius: 50px;
-            font-weight: 700;
-            transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
-            font-size: 1rem;
-        }
-        
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-        
-        .btn-secondary {
-            background: transparent;
-            border: 2px solid var(--gold);
-            color: var(--gold);
-        }
-        
-        .section {
-            padding: 80px 0;
-        }
-        
-        .section-header {
-            text-align: center;
-            margin-bottom: 50px;
-        }
-        
-        .section-header h2 {
-            font-size: 2.5rem;
-            color: var(--primary);
-            margin-bottom: 15px;
-        }
-        
-        .section-header p {
-            font-size: 1.1rem;
-            color: var(--secondary);
+        .hero-subtitle {
+            color: var(--primary-200);
             max-width: 700px;
-            margin: 0 auto;
+            margin: 0 auto var(--spacing-lg);
         }
         
         .payment-container {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            padding: 40px;
+            background: var(--bg-primary);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            padding: var(--spacing-xl);
             max-width: 800px;
             margin: 0 auto;
         }
         
-        .form-group {
-            margin-bottom: 25px;
+        .payment-header {
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
         }
         
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--secondary);
-        }
-        
-        .form-control {
-            width: 100%;
-            padding: 15px;
-            border: 2px solid #e0d8d0;
-            border-radius: 10px;
-            font-size: 1rem;
-            transition: border-color 0.3s;
-        }
-        
-        .form-control:focus {
-            border-color: var(--primary);
-            outline: none;
+        .payment-header h2 {
+            color: var(--primary-900);
+            margin-bottom: var(--spacing-md);
         }
         
         .payment-details {
-            background: var(--light);
-            padding: 25px;
-            border-radius: 10px;
-            margin: 30px 0;
+            background: var(--bg-secondary);
+            padding: var(--spacing-lg);
+            border-radius: var(--radius-md);
+            margin: var(--spacing-lg) 0;
         }
         
         .payment-details h3 {
-            color: var(--primary);
-            margin-bottom: 20px;
+            color: var(--primary-900);
+            margin-bottom: var(--spacing-md);
             text-align: center;
         }
         
         .account-info {
             display: flex;
             justify-content: space-between;
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 15px;
+            background: var(--bg-primary);
+            padding: var(--spacing-md);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--spacing-md);
+            box-shadow: var(--shadow-sm);
         }
         
         .instructions {
-            background: #e3f2fd;
-            padding: 20px;
-            border-radius: 10px;
-            margin: 25px 0;
+            background: var(--bg-accent);
+            padding: var(--spacing-lg);
+            border-radius: var(--radius-md);
+            margin: var(--spacing-lg) 0;
         }
         
         .instructions h4 {
-            color: var(--primary);
-            margin-bottom: 15px;
-        }
-        
-        .instructions ol {
-            padding-left: 20px;
-        }
-        
-        .instructions li {
-            margin-bottom: 10px;
+            color: var(--primary-900);
+            margin-bottom: var(--spacing-md);
         }
         
         .whatsapp-btn {
@@ -234,13 +92,13 @@
             color: white;
             display: inline-flex;
             align-items: center;
-            gap: 10px;
-            padding: 15px 25px;
-            border-radius: 50px;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-md) var(--spacing-lg);
+            border-radius: var(--radius-full);
             text-decoration: none;
-            font-weight: 600;
-            margin: 20px 0;
-            transition: all 0.3s ease;
+            font-weight: var(--font-semibold);
+            margin: var(--spacing-md) 0;
+            transition: transform var(--transition-fast), box-shadow var(--transition-fast);
         }
         
         .whatsapp-btn:hover {
@@ -250,291 +108,319 @@
         
         .notification {
             position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 20px;
-            border-radius: 10px;
+            top: var(--spacing-md);
+            right: var(--spacing-md);
+            padding: var(--spacing-md) var(--spacing-lg);
+            border-radius: var(--radius-md);
             color: white;
-            font-weight: 600;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            font-weight: var(--font-semibold);
+            box-shadow: var(--shadow-lg);
             z-index: 2000;
-            display: none;
+            transform: translateX(120%);
+            transition: transform var(--transition-medium);
+            max-width: 350px;
         }
         
-        .notification.success {
-            background: #4CAF50;
+        .notification.show {
+            transform: translateX(0);
         }
         
-        .notification.error {
-            background: #f44336;
+        .notification-success {
+            background: var(--success);
         }
         
-        footer {
-            background: var(--dark);
-            color: white;
-            padding: 50px 0 20px;
-        }
-        
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
-            margin-bottom: 30px;
-        }
-        
-        .footer-column h3 {
-            color: var(--gold);
-            margin-bottom: 20px;
-            font-size: 1.3rem;
-        }
-        
-        .footer-links {
-            list-style: none;
-        }
-        
-        .footer-links li {
-            margin-bottom: 10px;
-        }
-        
-        .footer-links a {
-            color: #ccc;
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-        
-        .footer-links a:hover {
-            color: var(--gold);
-        }
-        
-        .copyright {
-            text-align: center;
-            padding-top: 20px;
-            border-top: 1px solid #5D4037;
-            color: #aaa;
-            font-size: 0.9rem;
+        .notification-error {
+            background: var(--error);
         }
         
         @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2.2rem;
-            }
-            
-            .hero p {
-                font-size: 1rem;
-            }
-            
-            .section {
-                padding: 50px 0;
-            }
-            
-            .payment-container {
-                padding: 25px;
-            }
-            
             .account-info {
                 flex-direction: column;
-                gap: 10px;
+                gap: var(--spacing-xs);
             }
         }
     </style>
 </head>
 <body>
     <!-- Header -->
-    <header>
+    <header class="site-header">
         <div class="container header-container">
-            <a href="index.html" class="logo"><i class="fas fa-utensils"></i>JEMERA <span>Catering</span></a>
-            <nav>
-                <ul>
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="index.html#about">About</a></li>
-                    <li><a href="index.html#programs">Programs</a></li>
-                    <li><a href="index.html#contact">Contact</a></li>
+            <a href="index.html" class="logo">JEM<span class="logo-accent">RA</span></a>
+            
+            <!-- Desktop Navigation -->
+            <nav class="desktop-nav">
+                <ul class="nav-menu">
+                    <li><a href="index.html" class="nav-link">Home</a></li>
+                    <li><a href="index.html#about" class="nav-link">About</a></li>
+                    <li><a href="index.html#courses" class="nav-link">Courses</a></li>
+                    <li><a href="index.html#testimonials" class="nav-link">Testimonials</a></li>
                 </ul>
             </nav>
+            
+            <!-- Mobile Toggle -->
+            <button class="mobile-toggle" id="mobileToggle">
+                <i class="fas fa-bars"></i>
+            </button>
         </div>
     </header>
+    
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <button class="close-menu" id="closeMenu">
+            <i class="fas fa-times"></i>
+        </button>
+        
+        <div class="mobile-nav">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="index.html#about">About</a></li>
+                <li><a href="index.html#courses">Courses</a></li>
+                <li><a href="index.html#testimonials">Testimonials</a></li>
+            </ul>
+        </div>
+    </div>
 
     <!-- Hero Section -->
     <section class="hero">
         <div class="container">
-            <div class="hero-content">
-                <h1>Enroll in Our <span>Professional Catering</span> Course</h1>
-                <p>Transform your passion for food into a thriving career with Nigeria's premier catering institution. Pay now and start your journey toward culinary excellence.</p>
-            </div>
+            <h1 class="hero-title">Enroll in Our <span style="color: var(--accent-gold);">Professional Catering</span> Course</h1>
+            <p class="hero-subtitle">Transform your passion for food into a thriving career with Nigeria's premier catering institution. Limited time discount - enroll now for just ₦80,000 (originally ₦120,000)!</p>
         </div>
     </section>
 
     <!-- Payment Section -->
     <section class="section">
         <div class="container">
-            <div class="section-header">
-                <h2>Enrollment & Payment</h2>
-                <p>Complete the form below to enroll in our Professional Catering Chef Program</p>
-            </div>
-            
             <div class="payment-container">
-                <form id="enrollmentForm">
-                    <div class="form-group">
-                        <label for="fullName">Full Name</label>
-                        <input type="text" id="fullName" class="form-control" placeholder="Enter your full name" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="email">Email Address</label>
-                        <input type="email" id="email" class="form-control" placeholder="Enter your email address" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="phone">Phone Number</label>
-                        <input type="tel" id="phone" class="form-control" placeholder="Enter your phone number" required>
-                    </div>
-                    
+                <div class="payment-header">
+                    <h2>Enroll in Our Course</h2>
+                    <p>Complete your enrollment in our Professional Catering Chef Program - Limited time offer at just ₦80,000!</p>
+                </div>
+                
+                <div id="paymentContent">
                     <div class="payment-details">
-                        <h3><i class="fas fa-money-bill-wave"></i> Payment Information</h3>
+                        <h3><i class="fas fa-money-bill-wave"></i> Course Details</h3>
                         
                         <div class="account-info">
-                            <div><strong>Account Number:</strong></div>
-                            <div>9876543210</div>
+                            <div><strong>Course:</strong></div>
+                            <div><strong>Professional Catering Chef Program</strong></div>
                         </div>
                         
                         <div class="account-info">
-                            <div><strong>Account Name:</strong></div>
-                            <div>JEMERA Catering Services</div>
+                            <div><strong>Duration:</strong></div>
+                            <div><strong>8 weeks</strong></div>
                         </div>
                         
                         <div class="account-info">
-                            <div><strong>Bank:</strong></div>
-                            <div>Opay</div>
+                            <div><strong>Price:</strong></div>
+                            <div><strong>₦80,000</strong> <span class="text-muted line-through">₦120,000</span></div>
                         </div>
                         
-                        <div class="account-info">
-                            <div><strong>Amount:</strong></div>
-                            <div><strong>₦80,000</strong></div>
+                        <div class="text-center mt-3">
+                            <span class="badge bg-warning text-dark">LIMITED TIME DISCOUNT - SAVE ₦40,000!</span>
                         </div>
                     </div>
                     
                     <div class="instructions">
-                        <h4><i class="fas fa-list-ol"></i> Enrollment Instructions</h4>
-                        <ol>
-                            <li>Make a payment of <strong>₦80,000</strong> to the Opay account details above</li>
-                            <li>Include your <strong>FULL NAME</strong> in the payment description/note</li>
-                            <li>After payment, click the WhatsApp button below to send your payment proof to <strong>+234 703 446 901</strong></li>
-                            <li>Our team will verify your payment within 24 hours</li>
-                            <li>Upon verification, you'll receive a <strong>unique 8-character course code</strong> via WhatsApp</li>
-                            <li>Use your course code to access the course materials at <a href="course.html" target="_blank">course.html</a></li>
-                        </ol>
-                    </div>
-                    
-                    <div style="text-align: center;">
-                        <button type="submit" class="btn" style="width: 100%; padding: 15px; font-size: 1.1rem;">
-                            <i class="fas fa-check-circle"></i> I've Completed the Form - Proceed to Payment
+                        <h4>Secure Payment</h4>
+                        <div class="text-center mb-3">
+                            <span class="badge bg-warning text-dark">HURRY! LIMITED SPOTS AVAILABLE AT THIS DISCOUNTED PRICE</span>
+                        </div>
+                        <p>Click the button below to proceed with secure payment through OPay:</p>
+                        
+                        <button type="button" class="btn btn-primary btn-lg w-full" id="opayBtn">
+                            <i class="fas fa-credit-card"></i> Pay with OPay (₦80,000)
                         </button>
+                        
+                        <div class="mt-4 pt-3 border-top">
+                            <p class="text-center text-muted">
+                                <small>By enrolling, you agree to our <a href="#">Terms & Conditions</a> and <a href="#">Privacy Policy</a></small>
+                            </p>
+                        </div>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Notification -->
-    <div id="notification" class="notification"></div>
-
     <!-- Footer -->
-    <footer>
+    <footer class="site-footer">
         <div class="container">
             <div class="footer-content">
-                <div class="footer-column">
-                    <h3>JEMERA Catering</h3>
-                    <p>Founded by the Attah'S, Otupko's premier institution for catering and culinary education, dedicated to nurturing the next generation of culinary professionals through world-class training and mentorship.</p>
+                <div class="footer-section">
+                    <h3 class="footer-heading">JEMRA</h3>
+                    <p>Premium catering and culinary education for aspiring chefs and professional caterers.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
                 </div>
                 
-                <div class="footer-column">
-                    <h3>Quick Links</h3>
+                <div class="footer-section">
+                    <h3 class="footer-heading">Quick Links</h3>
                     <ul class="footer-links">
                         <li><a href="index.html">Home</a></li>
                         <li><a href="index.html#about">About Us</a></li>
-                        <li><a href="index.html#programs">Programs</a></li>
-                        <li><a href="index.html#contact">Contact</a></li>
+                        <li><a href="index.html#courses">Courses</a></li>
+                        <li><a href="index.html#testimonials">Testimonials</a></li>
                     </ul>
                 </div>
                 
-                <div class="footer-column">
-                    <h3>Contact Info</h3>
+                <div class="footer-section">
+                    <h3 class="footer-heading">Contact</h3>
                     <ul class="footer-links">
                         <li><i class="fas fa-map-marker-alt"></i> Number 4 Ojira Road, beside Jufex Pharmacy, Otukpo, Benue State</li>
                         <li><i class="fas fa-phone-alt"></i> 07034466901</li>
                         <li><i class="fas fa-envelope"></i> jemracs@gmail.com</li>
+                        <li><i class="fas fa-clock"></i> Mon-Fri: 8:00AM - 6:00PM</li>
                     </ul>
                 </div>
             </div>
             
             <div class="copyright">
-                <p>&copy; 2025 JEMERA Catering Services. All rights reserved.</p>
+                <p>&copy; 2025 JEMRA Catering & Culinary Academy. All rights reserved.</p>
+                <p class="founders">Founded by THE ATTAHS</p>
             </div>
         </div>
     </footer>
 
     <script>
-        // Show notification function
-        function showNotification(message, type) {
-            const notification = document.getElementById('notification');
-            notification.textContent = message;
-            notification.className = 'notification ' + type;
-            notification.style.display = 'block';
-            
-            setTimeout(() => {
-                notification.style.display = 'none';
-            }, 5000);
-        }
+        // Test Firebase connection
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if Firebase is properly initialized
+            if (typeof firebaseApp !== 'undefined') {
+                console.log('Firebase initialized successfully');
+            } else {
+                console.error('Firebase initialization failed');
+            }
+        });
         
-        // Form submission
-        document.getElementById('enrollmentForm').addEventListener('submit', function(e) {
-            e.preventDefault();
+        // Mobile menu functionality and payment scripts
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileToggle = document.getElementById('mobileToggle');
+            const closeMenu = document.getElementById('closeMenu');
+            const mobileMenu = document.getElementById('mobileMenu');
             
-            const fullName = document.getElementById('fullName').value;
-            const email = document.getElementById('email').value;
-            const phone = document.getElementById('phone').value;
+            // Open mobile menu
+            mobileToggle.addEventListener('click', function() {
+                mobileMenu.classList.add('active');
+            });
             
-            if (!fullName || !email || !phone) {
-                showNotification('Please fill in all required fields', 'error');
-                return;
+            // Close mobile menu
+            closeMenu.addEventListener('click', function() {
+                mobileMenu.classList.remove('active');
+            });
+            
+            // Close mobile menu when clicking outside
+            mobileMenu.addEventListener('click', function(e) {
+                if (e.target === mobileMenu) {
+                    mobileMenu.classList.remove('active');
+                }
+            });
+            
+            // Show notification function
+            function showNotification(message, type) {
+                const notification = document.createElement('div');
+                notification.className = `notification notification-${type} show`;
+                notification.innerHTML = `
+                    ${message}
+                    <button class="close-btn" onclick="this.parentElement.remove()">&times;</button>
+                `;
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.remove();
+                }, 5000);
             }
             
-            // Store form data in localStorage
-            const formData = {
-                fullName: fullName,
-                email: email,
-                phone: phone,
-                timestamp: new Date().toISOString(),
-                paymentStatus: 'pending'
-            };
+            // Check if user is logged in
+            function checkUserAuth() {
+                const user = firebaseApp.auth.currentUser;
+                if (!user) {
+                    showNotification('Please log in to proceed with payment', 'error');
+                    // Redirect to home page after a short delay
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 2000);
+                    return null;
+                }
+                return user;
+            }
             
-            // Save to localStorage
-            localStorage.setItem('enrollment_' + Date.now(), JSON.stringify(formData));
+            // Initialize OPay payment
+            async function initOPayPayment() {
+                const user = checkUserAuth();
+                if (!user) return;
+                
+                try {
+                    // Get user data from Firestore
+                    const userDoc = await firebaseApp.db.collection('users').doc(user.uid).get();
+                    const userData = userDoc.data();
+                    
+                    // Initialize OPay payment
+                    const result = await OPayIntegration.initPayment(
+                        80000, // Amount in NGN
+                        user.email,
+                        '', // Phone number (optional)
+                        userData.fullName || user.email,
+                        user.uid
+                    );
+                    
+                    if (result.success) {
+                        showNotification('Redirecting to secure payment gateway...', 'success');
+                        
+                        // In a real implementation, you would redirect to the payment URL
+                        // window.location.href = result.paymentUrl;
+                        
+                        // For demo purposes, we'll simulate the redirect
+                        setTimeout(() => {
+                            alert(`In a real implementation, you would be redirected to OPay to complete your payment.\n\nTransaction ID: ${result.transactionId}`);
+                            
+                            // Simulate successful payment after 3 seconds
+                            setTimeout(async () => {
+                                // Update payment status to successful
+                                await OPayIntegration.handleWebhook({
+                                    transactionId: result.transactionId,
+                                    status: 'successful',
+                                    amount: 80000
+                                });
+                                
+                                showNotification('Payment successful! Your enrollment is now confirmed.', 'success');
+                                
+                                // Update user payment status
+                                await firebaseApp.db.collection('users').doc(user.uid).update({
+                                    paymentStatus: 'paid',
+                                    enrolledAt: firebase.firestore.FieldValue.serverTimestamp()
+                                });
+                            }, 3000);
+                        }, 2000);
+                    } else {
+                        showNotification('Payment initialization failed: ' + result.error, 'error');
+                    }
+                } catch (error) {
+                    console.error('Payment error:', error);
+                    showNotification('Payment failed: ' + error.message, 'error');
+                }
+            }
             
-            // In a real implementation, you would also send this to a backend service
-            // For demonstration, we'll log it to console
-            console.log('Form data saved:', formData);
+            // Set up OPay button
+            const opayBtn = document.getElementById('opayBtn');
+            if (opayBtn) {
+                opayBtn.addEventListener('click', initOPayPayment);
+            }
             
-            showNotification('Form submitted successfully! Please proceed with payment and send proof via WhatsApp.', 'success');
-            
-            // Create WhatsApp button dynamically
-            const whatsappSection = document.createElement('div');
-            whatsappSection.style.textAlign = 'center';
-            whatsappSection.style.marginTop = '30px';
-            whatsappSection.innerHTML = `
-                <p style="margin-bottom: 20px; font-size: 1.1rem;">Click the button below to send your payment proof to our WhatsApp:</p>
-                <a href="https://wa.me/2347034466901?text=Hello,%20I'm%20${encodeURIComponent(fullName)}%20(${encodeURIComponent(phone)},%20${encodeURIComponent(email)}).%20I've%20made%20the%20payment%20for%20the%20catering%20course.%20Please%20find%20my%20payment%20proof%20attached." 
-                   class="whatsapp-btn" target="_blank">
-                    <i class="fab fa-whatsapp"></i> Send Payment Proof via WhatsApp
-                </a>
-                <p style="margin-top: 20px; color: #5D4037;">After sending your payment proof, our team will verify it within 24 hours and send you a unique course code to access the course materials. If you have any questions, you can reach us at <strong>+234 703 446 901</strong>.</p>
-            `;
-            
-            // Insert after the form
-            this.parentNode.appendChild(whatsappSection);
-            
-            // Hide the form
-            this.style.display = 'none';
+            // Check auth state on page load
+            firebaseApp.auth.onAuthStateChanged(function(user) {
+                if (!user) {
+                    showNotification('Please log in to access the payment page', 'error');
+                    // Redirect to home page after a short delay
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 3000);
+                }
+            });
         });
     </script>
 </body>

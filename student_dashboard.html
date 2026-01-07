@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - JEMRA Catering & Culinary Academy</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Access your JEMRA culinary course dashboard. View course materials, track progress, and continue your cooking education journey. Jemra, jemeral, jemral dashboard access.">
+    <meta name="keywords" content="JEMRA, jemeral, jemral, student dashboard, culinary courses, cooking education, course progress, cooking tutorials, chef training dashboard, culinary academy, culinary education, cooking skills, professional chef training, catering course materials, cooking tutorials, culinary modules, chef certification, cooking certification, cooking course dashboard, culinary course tracking">
+    <meta name="author" content="JEMRA Catering & Culinary Academy">
+    <meta name="robots" content="noindex, follow">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.jemraacademy.com/student_dashboard.html">
+    <meta property="og:title" content="Student Dashboard - JEMRA Catering & Culinary Academy">
+    <meta property="og:description" content="Access your JEMRA culinary course dashboard. View course materials, track progress, and continue your cooking education journey.">
+    <meta property="og:image" content="https://www.jemraacademy.com/images/student-dashboard.jpg">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://www.jemraacademy.com/student_dashboard.html">
+    <meta property="twitter:title" content="Student Dashboard - JEMRA Catering & Culinary Academy">
+    <meta property="twitter:description" content="Access your JEMRA culinary course dashboard. View course materials, track progress, and continue your cooking education journey.">
+    <meta property="twitter:image" content="https://www.jemraacademy.com/images/student-dashboard.jpg">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://www.jemraacademy.com/student_dashboard.html">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script src="assets/js/firebase-config.js"></script>
+    <style>
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--spacing-2xl) var(--spacing-md);
+        }
+        
+        .dashboard-header {
+            text-align: center;
+            margin-bottom: var(--spacing-4xl);
+            padding: var(--spacing-xl) 0;
+            border-bottom: 2px solid var(--neutral-200);
+        }
+        
+        .dashboard-header h1 {
+            color: var(--primary-900);
+            font-size: var(--text-4xl);
+            margin-bottom: var(--spacing-md);
+            font-weight: var(--font-bold);
+        }
+        
+        .dashboard-header p {
+            color: var(--neutral-700);
+            font-size: var(--text-lg);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .code-input-section {
+            background: var(--bg-primary);
+            padding: var(--spacing-3xl);
+            border-radius: var(--radius-2xl);
+            box-shadow: var(--shadow-lg);
+            margin-bottom: var(--spacing-4xl);
+            text-align: center;
+            border: 1px solid var(--neutral-200);
+        }
+        
+        .code-input-section h2 {
+            color: var(--primary-900);
+            margin-bottom: var(--spacing-xl);
+            font-size: var(--text-2xl);
+            font-weight: var(--font-semibold);
+        }
+        
+        .code-input-group {
+            display: flex;
+            max-width: 500px;
+            margin: 0 auto var(--spacing-xl);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            border: 2px solid var(--neutral-300);
+        }
+        
+        .code-input-group input {
+            flex: 1;
+            padding: var(--spacing-lg);
+            border: none;
+            font-size: var(--text-base);
+            outline: none;
+        }
+        
+        .code-input-group button {
+            padding: var(--spacing-lg) var(--spacing-xl);
+            background: var(--primary-700);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: var(--text-base);
+            font-weight: var(--font-semibold);
+            transition: background-color var(--transition-fast);
+        }
+        
+        .code-input-group button:hover {
+            background: var(--primary-800);
+        }
+        
+        .videos-section {
+            display: none;
+            background: var(--bg-primary);
+            padding: var(--spacing-3xl);
+            border-radius: var(--radius-2xl);
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--neutral-200);
+        }
+        
+        .videos-section.active {
+            display: block;
+        }
+        
+        .videos-section h2 {
+            color: var(--primary-900);
+            margin-bottom: var(--spacing-2xl);
+            text-align: center;
+            font-size: var(--text-2xl);
+            font-weight: var(--font-semibold);
+        }
+        
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: var(--spacing-2xl);
+            margin-top: var(--spacing-xl);
+        }
+        
+        .video-card {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+            border: 1px solid var(--neutral-200);
+        }
+        
+        .video-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-xl);
+        }
+        
+        .video-card video {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .video-info {
+            padding: var(--spacing-lg);
+        }
+        
+        .video-info h3 {
+            margin: 0 0 var(--spacing-md) 0;
+            color: var(--primary-900);
+            font-size: var(--text-lg);
+            font-weight: var(--font-semibold);
+        }
+        
+        .video-info p {
+            color: var(--neutral-700);
+            font-size: var(--text-sm);
+            margin: 0 0 var(--spacing-lg) 0;
+            line-height: 1.5;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: var(--spacing-sm) var(--spacing-md);
+            background: var(--primary-700);
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-size: var(--text-base);
+            font-weight: var(--font-semibold);
+            text-decoration: none;
+            transition: background-color var(--transition-fast);
+            border: none;
+        }
+        
+        .btn:hover {
+            background: var(--primary-800);
+        }
+        
+        .notification {
+            padding: var(--spacing-md);
+            margin: var(--spacing-md) 0;
+            border-radius: var(--radius-md);
+            display: none;
+            text-align: center;
+        }
+        
+        .notification.show {
+            display: block;
+        }
+        
+        .notification.success {
+            background: var(--success-bg);
+            color: var(--success-text);
+            border: 1px solid var(--success-border);
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .notification.error {
+            background: var(--error-bg);
+            color: var(--error-text);
+            border: 1px solid var(--error-border);
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .video-placeholder {
+            height: 200px;
+            background: var(--primary-100);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-700);
+            font-weight: var(--font-semibold);
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header" itemscope itemtype="https://schema.org/WPHeader">
+        <div class="container header-container">
+            <a href="index.html" class="logo" itemprop="publisher" itemscope itemtype="https://schema.org/EducationalOrganization">
+                <span itemprop="name">JEM<span class="logo-accent">RA</span></span>
+            </a>
+            
+            <!-- Desktop Navigation -->
+            <nav class="desktop-nav">
+                <ul class="nav-menu">
+                    <li><a href="index.html" class="nav-link">Home</a></li>
+                    <li><a href="payment_new.html" class="nav-link">Payment</a></li>
+                    <li><a href="student_dashboard.html" class="nav-link active">My Courses</a></li>
+                    <li><a href="#" onclick="document.getElementById('courseCodeInput').focus(); return false;" class="nav-link">Enter Code</a></li>
+                </ul>
+            </nav>
+            
+            <!-- Mobile Menu Toggle -->
+            <div class="mobile-toggle">
+                <button id="mobileToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+        
+        <div class="mobile-nav" id="mobileMenu">
+            <div class="mobile-header">
+                <button id="closeMenu">&times;</button>
+                <h3>Menu</h3>
+            </div>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="payment_new.html">Payment</a></li>
+                <li><a href="student_dashboard.html">My Courses</a></li>
+                <li><a href="#" onclick="document.getElementById('courseCodeInput').focus(); return false;">Enter Code</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <main class="dashboard-container">
+        <section class="dashboard-header">
+            <h1>Student Dashboard</h1>
+            <p>Welcome to your learning environment. Enter your course code to access your videos.</p>
+        </section>
+
+        <section class="code-input-section">
+            <h2>Enter Your Course Code</h2>
+            <div class="notification" id="codeNotification"></div>
+            <div class="code-input-group">
+                <input type="text" id="courseCodeInput" placeholder="Enter your course code here..." maxlength="20">
+                <button onclick="validateCourseCode()">Access Videos</button>
+            </div>
+        </section>
+
+        <section class="videos-section" id="videosSection">
+            <h2>Your Course Videos</h2>
+            <div class="video-grid" id="videoGrid">
+                <!-- Videos will be loaded here dynamically -->
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3 class="footer-heading">Jemerald Academy</h3>
+                    <p>Providing quality education and training for the modern world.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3 class="footer-heading">Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="payment_new.html">Payment</a></li>
+                        <li><a href="student_dashboard.html">My Courses</a></li>
+                        <li><a href="index.html#courses">Our Courses</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3 class="footer-heading">Contact Us</h3>
+                    <ul class="footer-contact">
+                        <li><i class="fas fa-envelope"></i> info@jemerald.com</li>
+                        <li><i class="fas fa-phone"></i> +234 800 000 0000</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 Jemerald Academy. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="assets/js/firebase-config.js"></script>
+    
+    <script>
+        // Mobile menu functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileToggle = document.getElementById('mobileToggle');
+            const closeMenu = document.getElementById('closeMenu');
+            const mobileMenu = document.getElementById('mobileMenu');
+            
+            mobileToggle.addEventListener('click', function() {
+                mobileMenu.classList.add('active');
+            });
+            
+            closeMenu.addEventListener('click', function() {
+                mobileMenu.classList.remove('active');
+            });
+            
+            mobileMenu.addEventListener('click', function(e) {
+                if (e.target === mobileMenu) {
+                    mobileMenu.classList.remove('active');
+                }
+            });
+        });
+        
+        // Validate course code and load videos
+        async function validateCourseCode() {
+            const codeInput = document.getElementById('courseCodeInput');
+            const code = codeInput.value.trim();
+            const notification = document.getElementById('codeNotification');
+            
+            if (!code) {
+                showNotification('Please enter a course code', 'error');
+                return;
+            }
+            
+            try {
+                showNotification('Validating course code...', 'success');
+                
+                // Check if course code exists in Firestore
+                const courseCodeSnapshot = await firebase.firestore()
+                    .collection('courseCodes')
+                    .where('code', '==', code)
+                    .limit(1)
+                    .get();
+                
+                if (courseCodeSnapshot.empty) {
+                    showNotification('Invalid course code. Please try again.', 'error');
+                    return;
+                }
+                
+                const courseCodeDoc = courseCodeSnapshot.docs[0];
+                const courseCodeData = courseCodeDoc.data();
+                
+                // Check if code has been used
+                if (courseCodeData.used === true) {
+                    showNotification('This course code has already been used.', 'error');
+                    return;
+                }
+                
+                // Mark the code as used
+                await firebase.firestore()
+                    .collection('courseCodes')
+                    .doc(courseCodeDoc.id)
+                    .update({
+                        used: true,
+                        usedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        usedBy: 'anonymous_student' // Since we removed auth
+                    });
+                
+                showNotification('Course code validated successfully! Loading videos...', 'success');
+                
+                // Show videos section and load sample videos
+                setTimeout(() => {
+                    document.getElementById('videosSection').classList.add('active');
+                    loadVideos();
+                }, 1500);
+                
+            } catch (error) {
+                console.error('Error validating course code:', error);
+                showNotification('Error validating course code: ' + error.message, 'error');
+            }
+        }
+        
+        // Show notification
+        function showNotification(message, type) {
+            const notification = document.getElementById('codeNotification');
+            notification.textContent = message;
+            notification.className = `notification ${type} show`;
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 5000);
+        }
+        
+        // Load videos based on course code from Firestore
+        async function loadVideos() {
+            const videoGrid = document.getElementById('videoGrid');
+            
+            try {
+                // In a real implementation, you would fetch videos associated with the course code
+                // For now, we'll use sample data but this would come from Firestore
+                
+                // Get the course code that was validated
+                const codeInput = document.getElementById('courseCodeInput');
+                const courseCode = codeInput.value.trim();
+                
+                // Fetch videos associated with this course code from Firestore
+                const videosSnapshot = await firebase.firestore()
+                    .collection('courseVideos')
+                    .where('courseCode', '==', courseCode)
+                    .orderBy('order', 'asc')
+                    .get();
+                
+                videoGrid.innerHTML = '';
+                
+                if (videosSnapshot.empty) {
+                    // If no videos found for this code, show sample videos
+                    showNotification('No videos found for this course code. Showing sample content.', 'error');
+                    
+                    // Sample video data
+                    const sampleVideos = [
+                        {
+                            title: "Introduction to the Course",
+                            description: "Welcome to the course and overview of what you'll learn",
+                            videoUrl: "https://example.com/video1.mp4" // Replace with actual video URLs
+                        },
+                        {
+                            title: "Module 1: Getting Started",
+                            description: "Learn the basics and fundamentals of the subject",
+                            videoUrl: "https://example.com/video2.mp4"
+                        },
+                        {
+                            title: "Module 2: Core Concepts",
+                            description: "Deep dive into the main concepts and principles",
+                            videoUrl: "https://example.com/video3.mp4"
+                        },
+                        {
+                            title: "Module 3: Practical Applications",
+                            description: "Apply what you've learned with practical examples",
+                            videoUrl: "https://example.com/video4.mp4"
+                        }
+                    ];
+                    
+                    sampleVideos.forEach(video => {
+                        const videoCard = document.createElement('div');
+                        videoCard.className = 'video-card';
+                        videoCard.innerHTML = `
+                            <div style="background: #ddd; height: 200px; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-video" style="font-size: 48px; color: #999;"></i>
+                            </div>
+                            <div class="video-info">
+                                <h3>${video.title}</h3>
+                                <p>${video.description}</p>
+                                <button class="btn btn-primary" onclick="playVideo('${video.videoUrl}')">Play Video</button>
+                            </div>
+                        `;
+                        videoGrid.appendChild(videoCard);
+                    });
+                } else {
+                    // Load actual videos from Firestore
+                    videosSnapshot.forEach(doc => {
+                        const video = doc.data();
+                        const videoCard = document.createElement('div');
+                        videoCard.className = 'video-card';
+                        videoCard.innerHTML = `
+                            <div style="background: #ddd; height: 200px; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-video" style="font-size: 48px; color: #999;"></i>
+                            </div>
+                            <div class="video-info">
+                                <h3>${video.title}</h3>
+                                <p>${video.description}</p>
+                                <button class="btn btn-primary" onclick="playVideo('${video.videoUrl}')">Play Video</button>
+                            </div>
+                        `;
+                        videoGrid.appendChild(videoCard);
+                    });
+                    
+                    showNotification('Videos loaded successfully!', 'success');
+                }
+            } catch (error) {
+                console.error('Error loading videos:', error);
+                showNotification('Error loading videos: ' + error.message, 'error');
+                
+                // Fallback to sample videos
+                loadSampleVideos();
+            }
+        }
+        
+        // Load sample videos as fallback
+        function loadSampleVideos() {
+            const videoGrid = document.getElementById('videoGrid');
+            
+            const sampleVideos = [
+                {
+                    title: "Introduction to the Course",
+                    description: "Welcome to the course and overview of what you'll learn",
+                    videoUrl: "https://example.com/video1.mp4" // Replace with actual video URLs
+                },
+                {
+                    title: "Module 1: Getting Started",
+                    description: "Learn the basics and fundamentals of the subject",
+                    videoUrl: "https://example.com/video2.mp4"
+                },
+                {
+                    title: "Module 2: Core Concepts",
+                    description: "Deep dive into the main concepts and principles",
+                    videoUrl: "https://example.com/video3.mp4"
+                },
+                {
+                    title: "Module 3: Practical Applications",
+                    description: "Apply what you've learned with practical examples",
+                    videoUrl: "https://example.com/video4.mp4"
+                }
+            ];
+            
+            videoGrid.innerHTML = '';
+            
+            sampleVideos.forEach(video => {
+                const videoCard = document.createElement('div');
+                videoCard.className = 'video-card';
+                videoCard.innerHTML = `
+                    <div style="background: #ddd; height: 200px; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-video" style="font-size: 48px; color: #999;"></i>
+                    </div>
+                    <div class="video-info">
+                        <h3>${video.title}</h3>
+                        <p>${video.description}</p>
+                        <button class="btn btn-primary" onclick="playVideo('${video.videoUrl}')">Play Video</button>
+                    </div>
+                `;
+                videoGrid.appendChild(videoCard);
+            });
+        }
+        
+        // Function to play video
+        function playVideo(videoUrl) {
+            // Create a modal to play the video
+            const videoModal = document.createElement('div');
+            videoModal.id = 'videoModal';
+            videoModal.className = 'modal-overlay';
+            videoModal.innerHTML = `
+                <div class="modal" style="max-width: 800px;">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Video Player</h3>
+                        <button class="modal-close" onclick="closeVideoModal()">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <video controls style="width: 100%; height: auto; max-height: 60vh;">
+                            <source src="${videoUrl}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(videoModal);
+            
+            // Add event listener to close modal when clicking outside
+            videoModal.addEventListener('click', function(e) {
+                if (e.target === videoModal) {
+                    closeVideoModal();
+                }
+            });
+        }
+        
+        // Function to close video modal
+        function closeVideoModal() {
+            const videoModal = document.getElementById('videoModal');
+            if (videoModal) {
+                videoModal.remove();
+            }
+        }
+        
+        // Allow pressing Enter to submit the code
+        document.getElementById('courseCodeInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                validateCourseCode();
+            }
+        });
+    </script>
+</body>
+</html>

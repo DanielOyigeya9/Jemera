@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enroll in Professional Catering Course - JEMRA Academy | Secure Payment</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Enroll in JEMRA's professional catering course with secure OPay payment. Limited time discount available. Start your culinary career today! Jemra, jemeral, jemral enrollment.">
+    <meta name="keywords" content="JEMRA, jemeral, jemral, catering course enrollment, culinary education payment, OPay payment Nigeria, cooking school fees, professional catering course, chef training enrollment, culinary academy payment, cooking course fees, chef certification payment, culinary education fees, cooking school enrollment, professional chef training, catering education, culinary course payment">
+    <meta name="author" content="JEMRA Catering & Culinary Academy">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.jemraacademy.com/payment_new.html">
+    <meta property="og:title" content="Enroll in Professional Catering Course - JEMRA Academy">
+    <meta property="og:description" content="Enroll in JEMRA's professional catering course with secure OPay payment. Limited time discount available. Start your culinary career today!">
+    <meta property="og:image" content="https://www.jemraacademy.com/images/enrollment-payment.jpg">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://www.jemraacademy.com/payment_new.html">
+    <meta property="twitter:title" content="Enroll in Professional Catering Course - JEMRA Academy">
+    <meta property="twitter:description" content="Enroll in JEMRA's professional catering course with secure OPay payment. Limited time discount available. Start your culinary career today!">
+    <meta property="twitter:image" content="https://www.jemraacademy.com/images/enrollment-payment.jpg">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://www.jemraacademy.com/payment_new.html">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script src="assets/js/firebase-config.js"></script>
+    <style>
+        /* Custom styles for this page */
+        .hero {
+            background: linear-gradient(135deg, var(--primary-700) 0%, var(--primary-900) 100%);
+            color: white;
+            padding: var(--spacing-3xl) 0;
+            text-align: center;
+        }
+        
+        .hero-title {
+            color: white;
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .hero-subtitle {
+            color: var(--primary-200);
+            max-width: 700px;
+            margin: 0 auto var(--spacing-lg);
+        }
+        
+        .payment-container {
+            background: var(--bg-primary);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            padding: var(--spacing-xl);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .payment-header {
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .payment-header h2 {
+            color: var(--primary-900);
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .payment-details {
+            background: var(--bg-secondary);
+            padding: var(--spacing-lg);
+            border-radius: var(--radius-md);
+            margin: var(--spacing-lg) 0;
+        }
+        
+        .payment-details h3 {
+            color: var(--primary-900);
+            margin-bottom: var(--spacing-md);
+            text-align: center;
+        }
+        
+        .account-info {
+            display: flex;
+            justify-content: space-between;
+            background: var(--bg-primary);
+            padding: var(--spacing-md);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--spacing-md);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .instructions {
+            background: var(--bg-accent);
+            padding: var(--spacing-lg);
+            border-radius: var(--radius-md);
+            margin: var(--spacing-lg) 0;
+        }
+        
+        .instructions h4 {
+            color: var(--primary-900);
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .whatsapp-btn {
+            background: #25D366;
+            color: white;
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-md) var(--spacing-lg);
+            border-radius: var(--radius-full);
+            text-decoration: none;
+            font-weight: var(--font-semibold);
+            margin: var(--spacing-md) 0;
+            transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+        }
+        
+        .whatsapp-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3);
+        }
+        
+        .notification {
+            position: fixed;
+            top: var(--spacing-md);
+            right: var(--spacing-md);
+            padding: var(--spacing-md) var(--spacing-lg);
+            border-radius: var(--radius-md);
+            color: white;
+            font-weight: var(--font-semibold);
+            box-shadow: var(--shadow-lg);
+            z-index: 2000;
+            transform: translateX(120%);
+            transition: transform var(--transition-medium);
+            max-width: 350px;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification-success {
+            background: var(--success);
+        }
+        
+        .notification-error {
+            background: var(--error);
+        }
+        
+        @media (max-width: 768px) {
+            .account-info {
+                flex-direction: column;
+                gap: var(--spacing-xs);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="site-header" itemscope itemtype="https://schema.org/WPHeader">
+        <div class="container header-container">
+            <a href="index.html" class="logo" itemprop="publisher" itemscope itemtype="https://schema.org/EducationalOrganization">
+                <span itemprop="name">JEM<span class="logo-accent">RA</span></span>
+            </a>
+            
+            <!-- Desktop Navigation -->
+            <nav class="desktop-nav">
+                <ul class="nav-menu">
+                    <li><a href="index.html" class="nav-link">Home</a></li>
+                    <li><a href="index.html#about" class="nav-link">About</a></li>
+                    <li><a href="index.html#courses" class="nav-link">Courses</a></li>
+                    <li><a href="index.html#testimonials" class="nav-link">Testimonials</a></li>
+                   <li><a href="student_dashboard.html" class="nav-link">My Courses</a></li>
+                </ul>
+            </nav>
+            
+            <!-- Mobile Toggle -->
+            <button class="mobile-toggle" id="mobileToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+    
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <button class="close-menu" id="closeMenu">
+            <i class="fas fa-times"></i>
+        </button>
+        
+        <div class="mobile-nav">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="index.html#about">About</a></li>
+                <li><a href="index.html#courses">Courses</a></li>
+                <li><a href="index.html#testimonials">Testimonials</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1 class="hero-title">Enroll in Our <span style="color: var(--accent-gold);">Professional Catering</span> Course</h1>
+            <p class="hero-subtitle">Transform your passion for food into a thriving career with Nigeria's premier catering institution. Limited time discount - enroll now for just ₦80,000 (originally ₦120,000)!</p>
+        </div>
+    </section>
+
+    <!-- Payment Section -->
+    <section class="section">
+        <div class="container">
+            <div class="payment-container">
+                <div class="payment-header">
+                    <h2>Enrollment & Payment</h2>
+                    <p>Complete the form below to enroll in our Professional Catering Chef Program - Limited time offer at just ₦80,000!</p>
+                </div>
+                
+                <form id="enrollmentForm">
+                    <div class="form-group">
+                        <label class="form-label" for="fullName">Full Name</label>
+                        <input type="text" id="fullName" class="form-control" placeholder="Enter your full name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="email">Email Address</label>
+                        <input type="email" id="email" class="form-control" placeholder="Enter your email address" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="phone">Phone Number</label>
+                        <input type="tel" id="phone" class="form-control" placeholder="Enter your phone number" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="senderName">Name on Your Bank Account</label>
+                        <input type="text" id="senderName" class="form-control" placeholder="Enter the name on the account you're transferring from" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="manualTransactionId">OPay Transaction ID</label>
+                        <input type="text" id="manualTransactionId" class="form-control" placeholder="Enter your transaction ID from OPay after making payment">
+                        <small class="form-text text-muted">This will be your transaction ID from OPay after you complete the transfer</small>
+                    </div>
+                    
+                    <div class="payment-details">
+                        <h3><i class="fas fa-money-bill-wave"></i> Payment Information</h3>
+                                            
+                        <div class="account-info">
+                            <div><strong>Amount:</strong></div>
+                            <div><strong>₦80,000</strong> <span class="text-muted line-through">₦120,000</span></div>
+                        </div>
+                        <div class="text-center mt-2">
+                            <span class="badge bg-warning text-dark">LIMITED TIME DISCOUNT - SAVE ₦40,000!</span>
+                        </div>
+                                            
+                        <div class="account-info mt-3">
+                            <div><strong>Account Name:</strong></div>
+                            <div><strong>Attah medina Victoria</strong></div>
+                        </div>
+                                            
+                        <div class="account-info">
+                            <div><strong>OPay Number:</strong></div>
+                            <div><strong>7034466901</strong></div>
+                        </div>
+                    </div>
+                    
+                    <div class="instructions">
+                        <h4>Payment Instructions</h4>
+                        <div class="text-center mb-3">
+                            <span class="badge bg-warning text-dark">HURRY! LIMITED SPOTS AVAILABLE AT THIS DISCOUNTED PRICE</span>
+                        </div>
+                        <ol>
+                            <li>Fill out the enrollment form below (including the name on your bank account)</li>
+                            <li>Make a manual transfer of ₦80,000 to the OPay account above</li>
+                            <li>Save your transaction ID from OPay after making the transfer</li>
+                            <li>Enter your transaction ID in the field above</li>
+                            <li>Click the WhatsApp button below to notify us of your payment</li>
+                            <li>You will receive your course access code within 24 hours</li>
+                        </ol>
+                    </div>
+                    
+                    <div class="button-group">
+                        <button type="submit" class="btn btn-primary" id="submitBtn">
+                            <i class="fas fa-save"></i> Submit Payment Details
+                        </button>
+                        <button type="button" class="whatsapp-btn" id="whatsappBtn" style="display:none;">
+                            <i class="fab fa-whatsapp"></i> Notify Payment via WhatsApp
+                        </button>
+                        <a href="student_dashboard.html" class="btn btn-success" id="continueBtn" style="display:none;">
+                            <i class="fas fa-arrow-right"></i> Continue to Dashboard
+                        </a>
+                    </div>
+                    
+                    <div class="text-center mt-4">
+                        <p class="text-muted">By enrolling, you agree to our <a href="#">Terms & Conditions</a> and <a href="#">Privacy Policy</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3 class="footer-heading">JEMRA</h3>
+                    <p>Premium catering and culinary education for aspiring chefs and professional caterers.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3 class="footer-heading">Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="index.html#about">About Us</a></li>
+                        <li><a href="index.html#courses">Courses</a></li>
+                        <li><a href="index.html#testimonials">Testimonials</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3 class="footer-heading">Contact</h3>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-map-marker-alt"></i> Number 4 Ojira Road, beside Jufex Pharmacy, Otukpo, Benue State</li>
+                        <li><i class="fas fa-phone-alt"></i> 07034466901</li>
+                        <li><i class="fas fa-envelope"></i> jemracs@gmail.com</li>
+                        <li><i class="fas fa-clock"></i> Mon-Fri: 8:00AM - 6:00PM</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2025 JEMRA Catering & Culinary Academy. All rights reserved.</p>
+                <p class="founders">Founded by THE ATTAHS</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Function to save user data to Firestore without requiring authentication
+        async function saveUserData(fullName, email, phone, senderName, manualTransactionId) {
+            try {
+                console.log('Firebase app initialized:', firebase.apps.length > 0);
+                console.log('Firestore object available:', firebase.firestore);
+                console.log('Attempting to connect to Firestore...');
+                
+                // Generate a unique ID for the user
+                const userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                
+                console.log('Generated userId:', userId);
+                
+                // Save user data to Firestore
+                const db = firebase.firestore();
+                await db.collection('users').doc(userId).set({
+                    fullName: fullName,
+                    email: email,
+                    phoneNumber: phone,
+                    senderName: senderName,
+                    manualTransactionId: manualTransactionId,
+                    paymentStatus: manualTransactionId ? 'pending' : 'unpaid',
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    isAdmin: false
+                });
+                
+                console.log('Successfully saved user data to Firestore with userId:', userId);
+                
+                return userId;
+            } catch (error) {
+                console.error('Error saving user data to Firestore:', error);
+                console.error('Error details:', error.code, error.message, error.stack);
+                throw error;
+            }
+        }
+        
+        // Generate a unique transaction ID
+        function generateTransactionId() {
+            return 'TXN-' + Date.now() + '-' + Math.random().toString(36).substr(2, 5).toUpperCase();
+        }
+        
+        // Mobile menu functionality and other scripts
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileToggle = document.getElementById('mobileToggle');
+            const closeMenu = document.getElementById('closeMenu');
+            const mobileMenu = document.getElementById('mobileMenu');
+            
+            // Open mobile menu
+            mobileToggle.addEventListener('click', function() {
+                mobileMenu.classList.add('active');
+            });
+            
+            // Close mobile menu
+            closeMenu.addEventListener('click', function() {
+                mobileMenu.classList.remove('active');
+            });
+            
+            // Close mobile menu when clicking outside
+            mobileMenu.addEventListener('click', function(e) {
+                if (e.target === mobileMenu) {
+                    mobileMenu.classList.remove('active');
+                }
+            });
+            
+            // Show notification function
+            function showNotification(message, type) {
+                const notification = document.createElement('div');
+                notification.className = `notification notification-${type} show`;
+                notification.innerHTML = `
+                    ${message}
+                    <button class="close-btn" onclick="this.parentElement.remove()">&times;</button>
+                `;
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.remove();
+                }, 5000);
+            }
+            
+            // WhatsApp button functionality
+            document.getElementById('whatsappBtn').addEventListener('click', function() {
+                // Get form values
+                const fullName = document.getElementById('fullName').value.trim();
+                const email = document.getElementById('email').value.trim();
+                const phone = document.getElementById('phone').value.trim();
+                const senderName = document.getElementById('senderName').value.trim();
+                const manualTransactionId = document.getElementById('manualTransactionId').value.trim();
+                
+                // Generate WhatsApp message
+                const message = encodeURIComponent(
+                    `Hello JEMRA, I'm ${fullName} and I've made payment for the Professional Catering Course.\n\n` +
+                    `My details:\n` +
+                    `Name: ${fullName}\n` +
+                    `Email: ${email}\n` +
+                    `Phone: ${phone}\n` +
+                    `Account Name: ${senderName}\n` +
+                    `Transaction ID: ${manualTransactionId || 'Not provided yet'}\n\n` +
+                    `Please verify my payment.`
+                );
+                
+                // WhatsApp URL (replace with actual number)
+                const whatsappUrl = `https://wa.me/2348012345678?text=${message}`;
+                
+                // Open WhatsApp in new tab
+                window.open(whatsappUrl, '_blank');
+                
+                // Show success message
+                showNotification('Opening WhatsApp to notify your payment...', 'success');
+            });
+            
+            // Form submission
+            document.getElementById('enrollmentForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                // Get form values
+                const fullName = document.getElementById('fullName').value.trim();
+                const email = document.getElementById('email').value.trim();
+                const phone = document.getElementById('phone').value.trim();
+                const senderName = document.getElementById('senderName').value.trim();
+                const manualTransactionId = document.getElementById('manualTransactionId').value.trim();
+                
+                // Validate
+                if (!fullName || !email || !phone || !senderName) {
+                    showNotification('Please fill in all required fields', 'error');
+                    return;
+                }
+                
+                // Check if Firebase is properly initialized
+                if (!firebase.apps.length) {
+                    console.error('Firebase app not initialized!');
+                    showNotification('Firebase not initialized. Please refresh the page.', 'error');
+                    return;
+                }
+                
+                if (!firebase.firestore) {
+                    console.error('Firestore not available!');
+                    showNotification('Firestore not available. Please refresh the page.', 'error');
+                    return;
+                }
+                
+                // Try to access Firestore to ensure it's properly initialized
+                try {
+                    const testFirestore = firebase.firestore();
+                    console.log('Firestore is accessible:', !!testFirestore);
+                } catch (error) {
+                    console.error('Error accessing Firestore:', error);
+                    showNotification('Error accessing Firestore. Please refresh the page.', 'error');
+                    return;
+                }
+                
+                // Show loading state
+                const submitBtn = document.getElementById('submitBtn');
+                const originalText = submitBtn.innerHTML;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+                submitBtn.disabled = true;
+                
+                // Save user data to Firestore
+                try {
+                    console.log('Attempting to save user data to Firestore...');
+                    console.log('Data to save:', {fullName, email, phone, senderName, manualTransactionId});
+                    
+                    await saveUserData(fullName, email, phone, senderName, manualTransactionId);
+                    
+                    console.log('Data saved successfully!');
+                    
+                    showNotification('Form submitted successfully! ' + (manualTransactionId ? 'Your transaction ID has been recorded. ' : '') + 'Please complete your payment and notify us via WhatsApp.', 'success');
+                    
+                    // Disable form inputs to prevent duplicate submissions
+                    document.getElementById('fullName').disabled = true;
+                    document.getElementById('email').disabled = true;
+                    document.getElementById('phone').disabled = true;
+                    document.getElementById('senderName').disabled = true;
+                    if (manualTransactionId) {
+                        document.getElementById('manualTransactionId').disabled = true;
+                    }
+                    
+                    // Show WhatsApp and Continue buttons
+                    document.getElementById('whatsappBtn').style.display = 'inline-flex';
+                    document.getElementById('continueBtn').style.display = 'inline-flex';
+                    
+                    // Hide submit button
+                    submitBtn.style.display = 'none';
+                } catch (error) {
+                    console.error('Error saving user data:', error);
+                    console.error('Error details:', error.code, error.message);
+                    showNotification('Error saving your information: ' + error.message, 'error');
+                } finally {
+                    // Restore submit button
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                }
+            });
+        });
+        
+        // Test Firestore connection
+        async function testFirestoreConnection() {
+            try {
+                console.log('Testing Firestore connection...');
+                const testDoc = await firebase.firestore().collection('test').doc('connection_test').set({
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                    status: 'connected'
+                });
+                console.log('Firestore test successful!');
+                
+                // Clean up the test document
+                await firebase.firestore().collection('test').doc('connection_test').delete();
+                console.log('Test document cleaned up.');
+            } catch (error) {
+                console.error('Firestore connection test failed:', error);
+            }
+        }
+        
+        // Run test when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            testFirestoreConnection();
+        });
+    </script>
+</body>
+</html>

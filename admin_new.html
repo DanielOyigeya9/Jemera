@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - JEMRA Catering</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script src="assets/js/firebase-config.js"></script>
+    <style>
+        /* Custom styles for this page */
+        .hero {
+            background: linear-gradient(135deg, var(--primary-700) 0%, var(--primary-900) 100%);
+            color: white;
+            text-align: center;
+            padding: var(--spacing-3xl) 0;
+        }
+        
+        .hero-title {
+            color: white;
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .hero-subtitle {
+            color: var(--primary-200);
+            max-width: 700px;
+            margin: 0 auto var(--spacing-lg);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing-lg);
+            margin: var(--spacing-2xl) 0;
+        }
+        
+        .stat-card {
+            background: var(--bg-primary);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            box-shadow: var(--shadow-md);
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: var(--text-3xl);
+            font-weight: var(--font-bold);
+            color: var(--primary-700);
+            margin-bottom: var(--spacing-xs);
+        }
+        
+        .stat-label {
+            color: var(--neutral-600);
+            font-size: var(--text-sm);
+        }
+        
+        .admin-container {
+            background: var(--bg-primary);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-2xl);
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: var(--spacing-lg);
+            flex-wrap: wrap;
+            gap: var(--spacing-md);
+        }
+        
+        .search-box {
+            flex: 1;
+            max-width: 400px;
+            position: relative;
+        }
+        
+        .filter-controls {
+            display: flex;
+            gap: var(--spacing-sm);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: var(--spacing-md);
+        }
+        
+        th, td {
+            padding: var(--spacing-md);
+            text-align: left;
+            border-bottom: 1px solid var(--neutral-200);
+        }
+        
+        th {
+            background: var(--bg-secondary);
+            color: var(--primary-900);
+            font-weight: var(--font-bold);
+        }
+        
+        tr:hover {
+            background: var(--primary-100);
+        }
+        
+        .status-badge {
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--radius-full);
+            font-size: var(--text-xs);
+            font-weight: var(--font-semibold);
+        }
+        
+        .status-pending {
+            background: var(--warning);
+            color: white;
+        }
+        
+        .status-verified {
+            background: var(--success);
+            color: white;
+        }
+        
+        .status-rejected {
+            background: var(--error);
+            color: white;
+        }
+        
+        .status-paid {
+            background: #28a745;
+            color: white;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: var(--spacing-xs);
+        }
+        
+        .btn-small {
+            padding: var(--spacing-xs) var(--spacing-sm);
+            font-size: var(--text-sm);
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: var(--spacing-xl);
+            gap: var(--spacing-xs);
+        }
+        
+        .page-link {
+            padding: var(--spacing-sm) var(--spacing-md);
+            border: 1px solid var(--neutral-300);
+            border-radius: var(--radius-md);
+            text-decoration: none;
+            color: var(--primary-700);
+        }
+        
+        .page-link.active {
+            background: var(--primary-700);
+            color: white;
+            border-color: var(--primary-700);
+        }
+        
+        .page-link:hover:not(.active) {
+            background: var(--primary-100);
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 5px;
+            color: white;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: none;
+        }
+        
+        .notification.show {
+            display: block;
+        }
+        
+        .notification-success {
+            background: #28a745;
+        }
+        
+        .notification-error {
+            background: #dc3545;
+        }
+        
+        .notification-info {
+            background: #17a2b8;
+        }
+        
+        @media (max-width: 768px) {
+            .controls {
+                flex-direction: column;
+            }
+            
+            .search-box {
+                max-width: 100%;
+            }
+            
+            .filter-controls {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            th, td {
+                padding: var(--spacing-sm);
+                font-size: var(--text-sm);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="site-header">
+        <div class="container header-container">
+            <a href="index.html" class="logo">JEM<span class="logo-accent">RA</span></a>
+            
+            <!-- Desktop Navigation -->
+            <nav class="desktop-nav">
+                <ul class="nav-menu">
+                    <li><a href="index.html" class="nav-link">Home</a></li>
+                    <li><a href="index.html#about" class="nav-link">About</a></li>
+                    <li><a href="index.html#courses" class="nav-link">Courses</a></li>
+                    <li><a href="index.html#testimonials" class="nav-link">Testimonials</a></li>
+                    <li><a href="payment_new.html" class="nav-link">Payment</a></li>
+                </ul>
+            </nav>
+            
+            <!-- Auth Buttons -->
+            <div class="header-actions">
+                <span id="welcomeUser"></span>
+                <button class="btn btn-outline" id="logoutBtn" style="display: none;">Logout</button>
+            </div>
+            
+            <!-- Mobile Toggle -->
+            <button class="mobile-toggle" id="mobileToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+    
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <button class="close-menu" id="closeMenu">
+            <i class="fas fa-times"></i>
+        </button>
+        
+        <div class="mobile-nav">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="index.html#about">About</a></li>
+                <li><a href="index.html#courses">Courses</a></li>
+                <li><a href="index.html#testimonials">Testimonials</a></li>
+                <li><a href="payment_new.html">Payment</a></li>
+                <li><button class="mobile-link" id="mobileLogoutBtn" style="display: none;">Logout</button></li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1 class="hero-title">Admin Dashboard</h1>
+            <p class="hero-subtitle">Manage enrollments for the Professional Catering Chef Program - Current price: ₦80,000 per student</p>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="container">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value" id="totalUsers">0</div>
+                <div class="stat-label">Total Users</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="paidUsers">0</div>
+                <div class="stat-label">Paid Users</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="pendingPayments">0</div>
+                <div class="stat-label">Pending Payments</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="totalRevenue">₦0</div>
+                <div class="stat-label">Revenue</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="activeUsers">0</div>
+                <div class="stat-label">Active Users</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="admins">0</div>
+                <div class="stat-label">Admin Users</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Admin Section -->
+    <section class="section">
+        <div class="container">
+            <div class="admin-container">
+                <div class="controls">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchInput" class="form-control" placeholder="Search users...">
+                    </div>
+                    <div class="filter-controls">
+                        <select id="paymentFilter" class="form-control" style="margin-right: 10px;">
+                            <option value="all">All Payments</option>
+                            <option value="paid">Paid</option>
+                            <option value="unpaid">Unpaid</option>
+                            <option value="pending">Pending</option>
+                        </select>
+                        <select id="roleFilter" class="form-control" style="margin-right: 10px;">
+                            <option value="all">All Roles</option>
+                            <option value="admin">Admin</option>
+                            <option value="user">User</option>
+                        </select>
+                        <button class="btn btn-outline" id="refreshBtn">
+                            <i class="fas fa-sync-alt"></i> Refresh
+                        </button>
+                        <button class="btn btn-primary" id="exportBtn">
+                            <i class="fas fa-download"></i> Export Data
+                        </button>
+                        <button class="btn btn-success" id="createCourseCodeBtn">
+                            <i class="fas fa-plus"></i> Create Course Code
+                        </button>
+                        <button class="btn btn-info" onclick="showVideoManagement()">
+                            <i class="fas fa-video"></i> Manage Videos
+                        </button>
+                    </div>
+                </div>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Account Name</th>
+                            <th>Date Registered</th>
+                            <th>Last Login</th>
+                            <th>Payment Status</th>
+                            <th>Amount</th>
+                            <th>Transaction ID</th>
+                            <th>Manual Transaction ID</th>
+                            <th>User Role</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="enrollmentTableBody">
+                        <!-- Data will be populated by JavaScript -->
+                    </tbody>
+                </table>
+                
+                <div class="pagination">
+                    <a href="#" class="page-link active">1</a>
+                    <a href="#" class="page-link">2</a>
+                    <a href="#" class="page-link">3</a>
+                    <a href="#" class="page-link">Next <i class="fas fa-chevron-right"></i></a>
+                </div>
+                
+                <!-- Course Code Creation Modal -->
+                <div id="courseCodeModal" class="modal" style="display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5);">
+                    <div class="modal-content" style="background-color: white; margin: 15% auto; padding: 20px; border: none; border-radius: 8px; width: 500px; max-width: 90%;">
+                        <span class="close" id="closeCourseCodeModal" style="color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer;">&times;</span>
+                        <h3>Create New Course Code</h3>
+                        <div class="form-group">
+                            <label for="courseCodeInput">Course Code:</label>
+                            <input type="text" id="courseCodeInput" class="form-control" placeholder="Enter course code (leave empty to auto-generate)">
+                        </div>
+                        <div class="form-group">
+                            <label for="courseCodeDescription">Description (Optional):</label>
+                            <input type="text" id="courseCodeDescription" class="form-control" placeholder="Enter description for this code">
+                        </div>
+                        <button class="btn btn-primary" id="generateCourseCodeBtn">Generate & Save</button>
+                        <button class="btn btn-outline" id="cancelCourseCodeBtn">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Notification Container -->
+    <div class="notification" id="notification"></div>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3 class="footer-heading">JEMRA</h3>
+                    <p>Premium catering and culinary education for aspiring chefs and professional caterers.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3 class="footer-heading">Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="index.html#about">About Us</a></li>
+                        <li><a href="index.html#courses">Courses</a></li>
+                        <li><a href="index.html#testimonials">Testimonials</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3 class="footer-heading">Contact</h3>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-map-marker-alt"></i> Number 4 Ojira Road, beside Jufex Pharmacy, Otukpo, Benue State</li>
+                        <li><i class="fas fa-phone-alt"></i> 07034466901</li>
+                        <li><i class="fas fa-envelope"></i> jemracs@gmail.com</li>
+                        <li><i class="fas fa-clock"></i> Mon-Fri: 8:00AM - 6:00PM</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2025 JEMRA Catering & Culinary Academy. All rights reserved.</p>
+                <p class="founders">Founded by THE ATTAHS</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Show notification function
+        function showNotification(message, type = 'info') {
+            const notification = document.getElementById('notification');
+            notification.className = `notification notification-${type} show`;
+            notification.textContent = message;
+            
+            // Auto-hide after 3 seconds
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Check if user is admin
+        async function checkAdminStatus(userId) {
+            try {
+                const userDoc = await firebase.firestore().collection('users').doc(userId).get();
+                if (userDoc.exists) {
+                    const userData = userDoc.data();
+                    return userData.isAdmin === true; // Explicitly check for true
+                }
+                return false;
+            } catch (error) {
+                console.error('Error checking admin status:', error);
+                // Return false but don't block functionality
+                return false;
+            }
+        }
+        
+        // Load user data
+        async function loadUserData() {
+            try {
+                showNotification('Loading user data...', 'info');
+                
+                // Get all users from Firestore
+                const usersSnapshot = await firebase.firestore().collection('users').get();
+                
+                // Clear the table first
+                const tableBody = document.getElementById('enrollmentTableBody');
+                tableBody.innerHTML = '';
+                
+                if (usersSnapshot.empty) {
+                    showNotification('No users found in database', 'info');
+                    // Update stats to show zero values
+                    document.getElementById('totalUsers').textContent = '0';
+                    document.getElementById('paidUsers').textContent = '0';
+                    document.getElementById('pendingPayments').textContent = '0';
+                    document.getElementById('totalRevenue').textContent = '₦0';
+                    document.getElementById('activeUsers').textContent = '0';
+                    document.getElementById('admins').textContent = '0';
+                    return;
+                }
+                
+                const users = [];
+                let totalUsers = 0;
+                let paidUsers = 0;
+                let pendingPayments = 0;
+                let totalRevenue = 0;
+                let activeUsers = 0;
+                let admins = 0;
+                
+                const oneWeekAgo = new Date();
+                oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+                
+                // Process each user
+                usersSnapshot.forEach(doc => {
+                    const userData = doc.data();
+                    users.push({ id: doc.id, ...userData });
+                    totalUsers++;
+                    
+                    if (userData.paymentStatus === 'paid') {
+                        paidUsers++;
+                        totalRevenue += 80000; // Assuming ₦80,000 per course
+                    } else {
+                        pendingPayments++;
+                    }
+                    
+                    // Check if user is admin
+                    if (userData.isAdmin) {
+                        admins++;
+                    }
+                    
+                    // Check if user was active in the last week
+                    if (userData.lastLogin) {
+                        const lastLogin = new Date(userData.lastLogin);
+                        if (lastLogin > oneWeekAgo) {
+                            activeUsers++;
+                        }
+                    } else if (userData.createdAt) {
+                        // If no lastLogin, check if account was created recently
+                        const createdAt = userData.createdAt.toDate ? userData.createdAt.toDate() : new Date(userData.createdAt);
+                        if (createdAt > oneWeekAgo) {
+                            activeUsers++;
+                        }
+                    }
+                });
+                
+                // Update stats
+                document.getElementById('totalUsers').textContent = totalUsers;
+                document.getElementById('paidUsers').textContent = paidUsers;
+                document.getElementById('pendingPayments').textContent = pendingPayments;
+                document.getElementById('totalRevenue').textContent = `₦${totalRevenue.toLocaleString()}`;
+                document.getElementById('activeUsers').textContent = activeUsers;
+                document.getElementById('admins').textContent = admins;
+                
+                // Render table
+                renderTable(users);
+                
+                showNotification('Data loaded successfully', 'success');
+            } catch (error) {
+                console.error('Error loading user data:', error);
+                showNotification('Error loading data: ' + error.message, 'error');
+                
+                // Update stats to show error state
+                document.getElementById('totalUsers').textContent = 'Error';
+                document.getElementById('paidUsers').textContent = 'Error';
+                document.getElementById('pendingPayments').textContent = 'Error';
+                document.getElementById('totalRevenue').textContent = '₦0';
+                document.getElementById('activeUsers').textContent = 'Error';
+                document.getElementById('admins').textContent = 'Error';
+            }
+        }
+        
+        // Render table function
+        function renderTable(data) {
+            const tableBody = document.getElementById('enrollmentTableBody');
+            tableBody.innerHTML = '';
+            
+            data.forEach(user => {
+                const row = document.createElement('tr');
+                const registrationDate = user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A';
+                const lastLoginDate = user.lastLogin ? new Date(user.lastLogin).toLocaleDateString() : 'Never';
+                
+                // Payment status badge
+                let statusClass = '';
+                let paymentStatus = 'Unpaid';
+                if (user.paymentStatus === 'paid') {
+                    statusClass = 'status-paid';
+                    paymentStatus = 'Paid';
+                } else if (user.paymentStatus === 'pending') {
+                    statusClass = 'status-pending';
+                    paymentStatus = 'Pending';
+                } else {
+                    statusClass = 'status-rejected';
+                    paymentStatus = 'Unpaid';
+                }
+                
+                const amount = user.paymentStatus === 'paid' ? '₦80,000' : '₦0';
+                const transactionId = user.transactionId || 'N/A';
+                const manualTransactionId = user.manualTransactionId || 'N/A';
+                const phone = user.phoneNumber || 'N/A';
+                const senderName = user.senderName || 'N/A';
+                const userRole = user.isAdmin ? 'Admin' : 'User';
+                const roleClass = user.isAdmin ? 'status-paid' : 'status-pending';
+                
+                row.innerHTML = `
+                    <td>${user.fullName || 'N/A'}</td>
+                    <td>${user.email}</td>
+                    <td>${phone}</td>
+                    <td>${senderName}</td>
+                    <td>${registrationDate}</td>
+                    <td>${lastLoginDate}</td>
+                    <td><span class="status-badge ${statusClass}">${paymentStatus}</span></td>
+                    <td>${amount}</td>
+                    <td>${transactionId}</td>
+                    <td>${manualTransactionId}</td>
+                    <td><span class="status-badge ${roleClass}">${userRole}</span></td>
+                    <td>
+                        <div class="action-buttons">
+                            ${user.paymentStatus === 'paid' ? 
+                                `<button class="btn btn-small btn-primary" onclick="sendCourseCode('${user.id}', '${user.email}')">
+                                    <i class="fas fa-key"></i> Send Code
+                                </button>` : 
+                                ''
+                            }
+                            <button class="btn btn-small btn-outline" onclick="toggleAdminStatus('${user.id}', ${user.isAdmin})">
+                                ${user.isAdmin ? 'Remove Admin' : 'Make Admin'}
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+        
+        // Toggle admin status
+        async function toggleAdminStatus(userId, isAdmin) {
+            try {
+                await firebase.firestore().collection('users').doc(userId).update({
+                    isAdmin: !isAdmin
+                });
+                
+                showNotification('User admin status updated successfully', 'success');
+                loadUserData(); // Refresh the data
+            } catch (error) {
+                console.error('Error updating admin status:', error);
+                showNotification('Error updating admin status: ' + error.message, 'error');
+            }
+        }
+        
+        // Send course code to user
+        async function sendCourseCode(userId, userEmail) {
+            try {
+                // Show modal to select delivery method
+                showSendCodeModal(userId, userEmail);
+            } catch (error) {
+                console.error('Error in sendCourseCode:', error);
+                showNotification('Error sending course code: ' + error.message, 'error');
+            }
+        }
+        
+        // Show modal for sending course code
+        function showSendCodeModal(userId, userEmail) {
+            // Create modal HTML if it doesn't exist
+            if (!document.getElementById('sendCodeModal')) {
+                const modalHtml = `
+                <div id="sendCodeModal" class="modal" style="display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5);">
+                    <div class="modal-content" style="background-color: white; margin: 15% auto; padding: 20px; border: none; border-radius: 8px; width: 500px; max-width: 90%;">
+                        <span class="close" id="closeSendCodeModal" style="color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer;">&times;</span>
+                        <h3>Send Course Code</h3>
+                        <div class="form-group">
+                            <label for="deliveryMethod">Delivery Method:</label>
+                            <select id="deliveryMethod" class="form-control">
+                                <option value="email">Email</option>
+                                <option value="sms">SMS</option>
+                                <option value="manual">Manual (Copy Code)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="customCode">Custom Course Code (optional, leave empty to auto-generate):</label>
+                            <input type="text" id="customCode" class="form-control" placeholder="Enter custom code or leave empty to auto-generate">
+                        </div>
+                        <div class="form-group">
+                            <label for="recipientEmail">Recipient Email:</label>
+                            <input type="email" id="recipientEmail" class="form-control" value="" readonly>
+                        </div>
+                        <button class="btn btn-primary" id="sendCodeBtn">Send Code</button>
+                        <button class="btn btn-outline" id="cancelSendCodeBtn">Cancel</button>
+                    </div>
+                </div>`;
+                document.body.insertAdjacentHTML('beforeend', modalHtml);
+                
+                // Add event listeners
+                document.getElementById('closeSendCodeModal').addEventListener('click', function() {
+                    document.getElementById('sendCodeModal').style.display = 'none';
+                });
+                
+                document.getElementById('cancelSendCodeBtn').addEventListener('click', function() {
+                    document.getElementById('sendCodeModal').style.display = 'none';
+                });
+                
+                document.getElementById('sendCodeBtn').addEventListener('click', function() {
+                    processSendCode(userId);
+                });
+            }
+            
+            // Set the user email
+            document.getElementById('recipientEmail').value = userEmail;
+            
+            // Show the modal
+            document.getElementById('sendCodeModal').style.display = 'block';
+        }
+        
+        // Process sending the code
+        async function processSendCode(userId) {
+            const deliveryMethod = document.getElementById('deliveryMethod').value;
+            const customCode = document.getElementById('customCode').value.trim();
+            const userEmail = document.getElementById('recipientEmail').value;
+            
+            let courseCode;
+            
+            // Generate or use custom code
+            if (customCode) {
+                courseCode = customCode;
+            } else {
+                courseCode = generateCourseCode();
+            }
+            
+            try {
+                // Validate the code
+                if (courseCode.length < 6) {
+                    showNotification('Course code must be at least 6 characters long', 'error');
+                    return;
+                }
+                
+                // Check if code already exists
+                const existingCodeSnapshot = await firebase.firestore()
+                    .collection('courseCodes')
+                    .where('code', '==', courseCode)
+                    .limit(1)
+                    .get();
+                
+                if (!existingCodeSnapshot.empty) {
+                    showNotification('This course code already exists. Please try another one.', 'error');
+                    return;
+                }
+                
+                // Save to Firestore with used = false
+                const courseCodeRef = await firebase.firestore().collection('courseCodes').add({
+                    code: courseCode,
+                    userId: userId,
+                    userEmail: userEmail,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    used: false,
+                    usedAt: null,
+                    usedBy: null,
+                    deliveryMethod: deliveryMethod
+                });
+                
+                // Close modal
+                document.getElementById('sendCodeModal').style.display = 'none';
+                
+                // Show success message based on delivery method
+                if (deliveryMethod === 'email') {
+                    showNotification(`Course code ${courseCode} generated and ready for email delivery to ${userEmail}`, 'success');
+                    // In a real implementation, you would send an email here
+                } else if (deliveryMethod === 'sms') {
+                    showNotification(`Course code ${courseCode} generated and ready for SMS delivery`, 'success');
+                    // In a real implementation, you would send an SMS here
+                } else {
+                    showNotification(`Course code ${courseCode} generated. Please copy and send to the user manually.`, 'success');
+                }
+                
+                // Optionally update user's payment status to indicate code was sent
+                await firebase.firestore().collection('users').doc(userId).update({
+                    courseCodeSent: true,
+                    courseCodeSentAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    assignedCourseCode: courseCode
+                });
+            } catch (error) {
+                console.error('Error sending course code:', error);
+                showNotification('Error sending course code: ' + error.message, 'error');
+            }
+        }
+        
+        // Generate a unique course code
+        function generateCourseCode() {
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let result = 'COURSE-';
+            for (let i = 0; i < 8; i++) {
+                result += characters.charAt(Math.floor(Math.random() * characters.length));
+            }
+            return result;
+        }
+        
+        // Generate and save course code
+        async function generateAndSaveCourseCode() {
+            try {
+                let courseCode = document.getElementById('courseCodeInput').value.trim();
+                const description = document.getElementById('courseCodeDescription').value.trim();
+                
+                // If no code provided, auto-generate one
+                if (!courseCode) {
+                    courseCode = generateCourseCode();
+                } else {
+                    // Validate the provided code
+                    if (courseCode.length < 6) {
+                        showNotification('Course code must be at least 6 characters long', 'error');
+                        return;
+                    }
+                }
+                
+                // Check if code already exists
+                const existingCodeSnapshot = await firebase.firestore()
+                    .collection('courseCodes')
+                    .where('code', '==', courseCode)
+                    .limit(1)
+                    .get();
+                
+                if (!existingCodeSnapshot.empty) {
+                    showNotification('This course code already exists. Please try another one.', 'error');
+                    return;
+                }
+                
+                // Save to Firestore
+                await firebase.firestore().collection('courseCodes').add({
+                    code: courseCode,
+                    description: description,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    used: false,
+                    usedAt: null,
+                    usedBy: null
+                });
+                
+                showNotification(`Course code ${courseCode} created successfully!`, 'success');
+                
+                // Close modal and clear inputs
+                document.getElementById('courseCodeModal').style.display = 'none';
+                document.getElementById('courseCodeInput').value = '';
+                document.getElementById('courseCodeDescription').value = '';
+            } catch (error) {
+                console.error('Error generating course code:', error);
+                showNotification('Error creating course code: ' + error.message, 'error');
+            }
+        }
+        
+        // Export data
+        async function exportData() {
+            try {
+                showNotification('Exporting data...', 'info');
+                
+                // Get user data from Firestore
+                const usersSnapshot = await firebase.firestore().collection('users').get();
+                
+                if (usersSnapshot.empty) {
+                    showNotification('No users found to export', 'info');
+                    return;
+                }
+                
+                const users = [];
+                
+                usersSnapshot.forEach(doc => {
+                    const userData = doc.data();
+                    users.push({
+                        name: userData.fullName || 'N/A',
+                        email: userData.email,
+                        phone: userData.phoneNumber || 'N/A',
+                        registrationDate: userData.createdAt ? (userData.createdAt.toDate ? userData.createdAt.toDate() : new Date(userData.createdAt)).toLocaleDateString() : 'N/A',
+                        paymentStatus: userData.paymentStatus || 'unpaid',
+                        amount: userData.paymentStatus === 'paid' ? '₦80,000' : '₦0',
+                        transactionId: userData.transactionId || 'N/A',
+                        manualTransactionId: userData.manualTransactionId || 'N/A'
+                    });
+                });
+                
+                // Convert to CSV
+                let csv = 'Name,Email,Phone,Registration Date,Payment Status,Amount,Transaction ID,Manual Transaction ID\n';
+                users.forEach(user => {
+                    csv += `"${user.name}","${user.email}","${user.phone}","${user.registrationDate}","${user.paymentStatus}","${user.amount}","${user.transactionId}","${user.manualTransactionId}"\n`;
+                });
+                
+                // Create download link
+                const blob = new Blob([csv], { type: 'text/csv' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.setAttribute('hidden', '');
+                a.setAttribute('href', url);
+                a.setAttribute('download', 'user_data.csv');
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                
+                showNotification('Data exported successfully', 'success');
+            } catch (error) {
+                console.error('Error exporting data:', error);
+                showNotification('Error exporting data: ' + error.message, 'error');
+            }
+        }
+        
+        // Mobile menu functionality and other scripts
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileToggle = document.getElementById('mobileToggle');
+            const closeMenu = document.getElementById('closeMenu');
+            const mobileMenu = document.getElementById('mobileMenu');
+            
+            // Open mobile menu
+            mobileToggle.addEventListener('click', function() {
+                mobileMenu.classList.add('active');
+            });
+            
+            // Close mobile menu
+            closeMenu.addEventListener('click', function() {
+                mobileMenu.classList.remove('active');
+            });
+            
+            // Close mobile menu when clicking outside
+            mobileMenu.addEventListener('click', function(e) {
+                if (e.target === mobileMenu) {
+                    mobileMenu.classList.remove('active');
+                }
+            });
+            
+            // Set up refresh button
+            document.getElementById('refreshBtn').addEventListener('click', function() {
+                document.getElementById('searchInput').value = '';
+                document.getElementById('paymentFilter').value = 'all';
+                document.getElementById('roleFilter').value = 'all';
+                loadUserData();
+            });
+            
+            // Set up export button
+            document.getElementById('exportBtn').addEventListener('click', exportData);
+            
+            // Set up create course code button
+            document.getElementById('createCourseCodeBtn').addEventListener('click', function() {
+                document.getElementById('courseCodeModal').style.display = 'block';
+            });
+            
+            // Set up close modal functionality
+            document.getElementById('closeCourseCodeModal').addEventListener('click', function() {
+                document.getElementById('courseCodeModal').style.display = 'none';
+                // Clear inputs
+                document.getElementById('courseCodeInput').value = '';
+                document.getElementById('courseCodeDescription').value = '';
+            });
+            
+            document.getElementById('cancelCourseCodeBtn').addEventListener('click', function() {
+                document.getElementById('courseCodeModal').style.display = 'none';
+                // Clear inputs
+                document.getElementById('courseCodeInput').value = '';
+                document.getElementById('courseCodeDescription').value = '';
+            });
+            
+            // Handle course code generation
+            document.getElementById('generateCourseCodeBtn').addEventListener('click', generateAndSaveCourseCode);
+            
+            // Search functionality
+            document.getElementById('searchInput').addEventListener('input', async function() {
+                applyFilters();
+            });
+            
+            // Payment filter
+            document.getElementById('paymentFilter').addEventListener('change', function() {
+                applyFilters();
+            });
+            
+            // Role filter
+            document.getElementById('roleFilter').addEventListener('change', function() {
+                applyFilters();
+            });
+            
+            // Apply filters function
+            async function applyFilters() {
+                const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+                const paymentFilter = document.getElementById('paymentFilter').value;
+                const roleFilter = document.getElementById('roleFilter').value;
+                
+                try {
+                    // Get all users from Firestore
+                    const usersSnapshot = await firebase.firestore().collection('users').get();
+                    
+                    if (usersSnapshot.empty) {
+                        showNotification('No users found in database', 'error');
+                        renderTable([]);
+                        return;
+                    }
+                    
+                    let users = [];
+                    
+                    // Convert to array format
+                    usersSnapshot.forEach(doc => {
+                        const userData = doc.data();
+                        users.push({ id: doc.id, ...userData });
+                    });
+                    
+                    // Apply search filter
+                    if (searchTerm.length > 0) {
+                        users = users.filter(user => 
+                            (user.fullName && user.fullName.toLowerCase().includes(searchTerm)) ||
+                            user.email.toLowerCase().includes(searchTerm) ||
+                            (user.phoneNumber && user.phoneNumber.includes(searchTerm))
+                        );
+                    }
+                    
+                    // Apply payment filter
+                    if (paymentFilter !== 'all') {
+                        users = users.filter(user => {
+                            if (paymentFilter === 'paid') {
+                                return user.paymentStatus === 'paid';
+                            } else if (paymentFilter === 'unpaid') {
+                                return !user.paymentStatus || user.paymentStatus !== 'paid';
+                            } else if (paymentFilter === 'pending') {
+                                return user.paymentStatus === 'pending';
+                            }
+                            return true;
+                        });
+                    }
+                    
+                    // Apply role filter
+                    if (roleFilter !== 'all') {
+                        users = users.filter(user => {
+                            if (roleFilter === 'admin') {
+                                return user.isAdmin === true;
+                            } else if (roleFilter === 'user') {
+                                return !user.isAdmin;
+                            }
+                            return true;
+                        });
+                    }
+                    
+                    renderTable(users);
+                } catch (error) {
+                    console.error('Error applying filters:', error);
+                    showNotification('Error applying filters: ' + error.message, 'error');
+                }
+            }
+            
+            // Logout function
+            async function logoutUser() {
+                try {
+                    // Clear admin access session
+                    sessionStorage.removeItem('adminAccess');
+                    console.log('User logged out successfully');
+                    // Redirect to home page
+                    window.location.href = 'index.html';
+                } catch (error) {
+                    console.error('Logout error:', error);
+                    showNotification('Logout failed: ' + error.message, 'error');
+                }
+            }
+            
+            // Set up logout buttons
+            document.getElementById('logoutBtn').addEventListener('click', logoutUser);
+            document.getElementById('mobileLogoutBtn').addEventListener('click', logoutUser);
+            
+            // Check if user has admin access through session or other means
+            // In this implementation, we'll add a simple check
+            // The admin access is controlled by the admin login page
+            try {
+                // Check if user has access by checking for a specific session variable
+                // For now, we'll use a simple approach but in production, this should be more secure
+                const hasAccess = sessionStorage.getItem('adminAccess') === 'true';
+                
+                if (!hasAccess) {
+                    // Redirect to admin login if no access
+                    showNotification('Access denied. Please log in to access the admin panel.', 'error');
+                    setTimeout(() => {
+                        window.location.href = 'admin_login.html';
+                    }, 3000);
+                    return;
+                }
+                
+                loadUserData();
+                document.getElementById('welcomeUser').textContent = 'Welcome, Admin';
+                document.getElementById('logoutBtn').style.display = 'inline-block';
+                document.getElementById('mobileLogoutBtn').style.display = 'inline-block';
+            } catch (error) {
+                console.error('Error loading data:', error);
+                showNotification('Error loading data: ' + error.message, 'error');
+            }
+        });
+        
+        // Function to manage course videos
+        function showVideoManagement() {
+            // Create modal HTML if it doesn't exist
+            if (!document.getElementById('videoManagementModal')) {
+                const modalHtml = `
+                <div id="videoManagementModal" class="modal-overlay">
+                    <div class="modal">
+                        <div class="modal-header">
+                            <h3 class="modal-title">Manage Course Videos</h3>
+                            <button class="modal-close" id="closeVideoManagementModal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="videoCourseCode">Course Code:</label>
+                                <input type="text" id="videoCourseCode" class="form-control" placeholder="Enter course code">
+                            </div>
+                            <div class="form-group">
+                                <label for="videoTitle">Video Title:</label>
+                                <input type="text" id="videoTitle" class="form-control" placeholder="Enter video title">
+                            </div>
+                            <div class="form-group">
+                                <label for="videoDescription">Description:</label>
+                                <textarea id="videoDescription" class="form-control" placeholder="Enter video description"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="videoUrl">Video URL:</label>
+                                <input type="text" id="videoUrl" class="form-control" placeholder="Enter video URL">
+                            </div>
+                            <div class="form-group">
+                                <label for="videoOrder">Order:</label>
+                                <input type="number" id="videoOrder" class="form-control" placeholder="Enter order number" value="1">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-primary" id="saveVideoBtn">Save Video</button>
+                            <button class="btn btn-outline" id="cancelVideoBtn">Cancel</button>
+                        </div>
+                    </div>
+                </div>`;
+                document.body.insertAdjacentHTML('beforeend', modalHtml);
+                
+                // Add event listeners
+                document.getElementById('closeVideoManagementModal').addEventListener('click', function() {
+                    document.getElementById('videoManagementModal').classList.remove('active');
+                });
+                
+                document.getElementById('cancelVideoBtn').addEventListener('click', function() {
+                    document.getElementById('videoManagementModal').classList.remove('active');
+                });
+                
+                document.getElementById('saveVideoBtn').addEventListener('click', saveCourseVideo);
+            }
+            
+            // Clear inputs
+            document.getElementById('videoCourseCode').value = '';
+            document.getElementById('videoTitle').value = '';
+            document.getElementById('videoDescription').value = '';
+            document.getElementById('videoUrl').value = '';
+            document.getElementById('videoOrder').value = '1';
+            
+            // Show the modal
+            document.getElementById('videoManagementModal').classList.add('active');
+        }
+        
+        // Save course video to Firestore
+        async function saveCourseVideo() {
+            const courseCode = document.getElementById('videoCourseCode').value.trim();
+            const title = document.getElementById('videoTitle').value.trim();
+            const description = document.getElementById('videoDescription').value.trim();
+            const videoUrl = document.getElementById('videoUrl').value.trim();
+            const order = parseInt(document.getElementById('videoOrder').value.trim()) || 1;
+            
+            if (!courseCode || !title || !videoUrl) {
+                showNotification('Please fill in all required fields', 'error');
+                return;
+            }
+            
+            try {
+                // Save to Firestore
+                await firebase.firestore().collection('courseVideos').add({
+                    courseCode: courseCode,
+                    title: title,
+                    description: description,
+                    videoUrl: videoUrl,
+                    order: order,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                showNotification('Video saved successfully!', 'success');
+                
+                // Close modal
+                document.getElementById('videoManagementModal').classList.remove('active');
+            } catch (error) {
+                console.error('Error saving video:', error);
+                showNotification('Error saving video: ' + error.message, 'error');
+            }
+        }
+    </script>
+</body>
+</html>
